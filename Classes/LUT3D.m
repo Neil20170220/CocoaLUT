@@ -198,6 +198,10 @@
 
     LUT3D *extractedLUT = (LUT3D *)[self LUTByCombiningWithLUT:reversed1D];
     [extractedLUT copyMetaPropertiesFromLUT:self];
+    
+    if (extractedLUT.size != self.size) {
+        extractedLUT = [extractedLUT LUTByResizingToSize:self.size];
+    }
 
     return extractedLUT;
 }
