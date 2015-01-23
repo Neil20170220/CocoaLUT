@@ -62,20 +62,25 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
  *  Returns a new `LUT` by reading the contents of a file represented by a file URL. It will automatically detect the type of LUT file format.
  *
  *  @param url A file URL.
+ *  @param error The error object (if an error occured).
  *
  *  @return A new `LUT` with the contents of url.
  */
-+ (instancetype)LUTFromURL:(NSURL *)url;
++ (instancetype)LUTFromURL:(NSURL *)url
+                     error:(NSError * __autoreleasing *)error;
 
 /**
  *	Loads a `LUT` from NSData, using the formatter that handles a specific extension
  *
  *	@param data      The data to load
  *	@param formatterID The formatter ID for selecting the correct formatter
+ *  @param error The error object (if an error occured).
  *
  *  @return A new `LUT` with the contents of the data.
  */
-+ (instancetype)LUTFromData:(NSData *)data formatterID:(NSString *)formatterID;
++ (instancetype)LUTFromData:(NSData *)data
+                formatterID:(NSString *)formatterID
+                      error:(NSError * __autoreleasing *)error;
 
 + (instancetype)LUTFromDataRepresentation:(NSData *)data;
 

@@ -9,7 +9,7 @@
 #import "LUT.h"
 #import "CocoaLUT.h"
 #import "LUTFormatter.h"
-
+#import "LUTError.h"
 
 @interface LUT ()
 @end
@@ -64,21 +64,47 @@
     return self;
 }
 
-+ (instancetype)LUTFromURL:(NSURL *)url {
++ (instancetype)LUTFromURL:(NSURL *)url error:(NSError * __autoreleasing *)error{
     LUTFormatter *formatter = [LUTFormatter LUTFormatterValidForReadingURL:url];
     if(formatter == nil){
         return nil;
     }
-    return [[formatter class] LUTFromURL:url];
+    LUT *lut;
+    @try {
+        lut = [[formatter class] LUTFromURL:url];
+    }
+    @catch (NSException *exception) {
+        if (error) {
+            *error = [NSError errorWithDomain:LUTErrorDomain
+                                         code:LUTErrorLUTCouldNotBeRead
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason?:@"Unknown", nil), @"errorName":exception.name?:@"Unknown"}];
+        }
+        return nil;
+    }
+    
+    return lut;
+    
 }
 
-+ (instancetype)LUTFromData:(NSData *)data formatterID:(NSString *)formatterID
++ (instancetype)LUTFromData:(NSData *)data formatterID:(NSString *)formatterID error:(NSError * __autoreleasing *)error
 {
     LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:formatterID];
     if(formatter == nil){
         return nil;
     }
-    return [[formatter class] LUTFromData:data];
+    
+    LUT *lut;
+    @try {
+        lut = [[formatter class] LUTFromData:data];
+    }
+    @catch (NSException *exception) {
+        if (error) {
+            *error = [NSError errorWithDomain:LUTErrorDomain
+                                         code:LUTErrorLUTCouldNotBeRead
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason, nil)?:NSLocalizedString(@"Unknown", nil), @"errorName":exception.name?:@"Unknown"}];
+        }
+        return nil;
+    }
 }
 
 + (instancetype)LUTFromDataRepresentation:(NSData *)data{
