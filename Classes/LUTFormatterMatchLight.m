@@ -18,7 +18,7 @@
     NSUInteger lut1DStartIndex = findFirstLUTLineInLinesWithWhitespaceSeparators(lines, 3, 0);
     
     if(lut1DStartIndex == NSNotFound){
-        @throw [NSException exceptionWithName:@"LUTParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
+        @throw [NSException exceptionWithName:@"MatchLightParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
     }
     
     NSUInteger lut1DSize = NSNotFound;
@@ -42,7 +42,7 @@
     }
     
     if(lut1DSize == NSNotFound || lut3DSize == NSNotFound || lut3DStartIndex == NSNotFound){
-        @throw [NSException exceptionWithName:@"LUTParserError" reason:@"Couldn't find LUT sizes." userInfo:nil];
+        @throw [NSException exceptionWithName:@"MatchLightParserError" reason:@"Couldn't find LUT sizes." userInfo:nil];
     }
     
     NSArray *lut1DLines = [lines subarrayWithRange:NSMakeRange(lut1DStartIndex, lut1DSize)];

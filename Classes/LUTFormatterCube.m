@@ -30,7 +30,7 @@
     NSUInteger cubeLinesStartIndex = findFirstLUTLineInLinesWithWhitespaceSeparators(lines, 3, 0);
 
     if(cubeLinesStartIndex == NSNotFound){
-        @throw [NSException exceptionWithName:@"LUTParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
+        @throw [NSException exceptionWithName:@"CubeParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
     }
 
     NSArray *headerLines = [lines subarrayWithRange:NSMakeRange(0, cubeLinesStartIndex)];

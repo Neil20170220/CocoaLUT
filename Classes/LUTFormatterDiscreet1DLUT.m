@@ -35,7 +35,7 @@
     NSUInteger lutLinesStartIndex = findFirstLUTLineInLines(lines, @"", 1, 0);
 
     if(lutLinesStartIndex == -1){
-        @throw [NSException exceptionWithName:@"LUTParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
+        @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
     }
 
     NSArray *headerLines = [lines subarrayWithRange:NSMakeRange(0, lutLinesStartIndex)];
@@ -60,12 +60,12 @@
     }
 
     if(trimmedLines.count < lutSize*3){
-        @throw [NSException exceptionWithName:@"LUTParserError" reason:@"Incomplete data lines." userInfo:nil];
+        @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:@"Incomplete data lines." userInfo:nil];
     }
 
     for(NSString *checkLine in trimmedLines){
         if(stringIsValidNumber(checkLine) == NO){
-            @throw [NSException exceptionWithName:@"LUTParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", checkLine] userInfo:nil];
+            @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", checkLine] userInfo:nil];
         }
     }
 

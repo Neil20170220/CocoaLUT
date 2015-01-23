@@ -34,7 +34,7 @@
         }
 
         if(stringIsValidNumber(line) == NO){
-            @throw [NSException exceptionWithName:@"LUTParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", line] userInfo:nil];
+            @throw [NSException exceptionWithName:@"ArriLookParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", line] userInfo:nil];
         }
 
         [curve1D addObject:@((double)[line integerValue]/4095.0)];

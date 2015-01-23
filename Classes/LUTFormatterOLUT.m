@@ -39,7 +39,7 @@
         splitLine = arrayWithEmptyElementsRemoved(splitLine);
         for(NSString *checkLine in splitLine){
             if(stringIsValidNumber(checkLine) == NO){
-                @throw [NSException exceptionWithName:@"LUTParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", checkLine] userInfo:nil];
+                @throw [NSException exceptionWithName:@"OLUTParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", checkLine] userInfo:nil];
             }
         }
 
