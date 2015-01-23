@@ -49,7 +49,7 @@
                 isLUT3D = YES;
 
                 if (data[@"cubeSize"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Size parameter read already once."
                                                  userInfo:nil];
                 }
@@ -59,7 +59,7 @@
 
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Size parameter is invalid."
                                                  userInfo:nil];
                 }
@@ -68,7 +68,7 @@
                 isLUT1D = YES;
 
                 if (data[@"cubeSize"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Size parameter read already once."
                                                  userInfo:nil];
                 }
@@ -78,14 +78,14 @@
 
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Size parameter is invalid."
                                                  userInfo:nil];
                 }
             }
             else if ([line rangeOfString:@"LUT_3D_INPUT_RANGE"].location != NSNotFound) {
                 if (data[@"inputLowerBound"] != nil || data[@"inputUpperBound"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Input Bounds already defined."
                                                  userInfo:nil];
                 }
@@ -107,7 +107,7 @@
                     }
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"INPUT_RANGE invalid."
                                                  userInfo:nil];
                 }
@@ -115,7 +115,7 @@
             else if ([line rangeOfString:@"LUT_1D_INPUT_RANGE"].location != NSNotFound) {
 
                 if (data[@"inputLowerBound"] != nil || data[@"inputUpperBound"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Input Bounds already defined."
                                                  userInfo:nil];
                 }
@@ -138,7 +138,7 @@
                     }
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"INPUT_RANGE invalid."
                                                  userInfo:nil];
                 }
@@ -148,7 +148,7 @@
             else if ([line rangeOfString:@"DOMAIN_MIN"].location != NSNotFound) {
                 passthroughFileOptions[@"fileTypeVariant"] = @"Iridas/Adobe";
                 if (data[@"inputLowerBound"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Input Bound already defined."
                                                  userInfo:nil];
                 }
@@ -157,7 +157,7 @@
                     data[@"inputLowerBound"] = @([splitLine[1] doubleValue]);
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"DOMAIN_MIN invalid."
                                                  userInfo:nil];
                 }
@@ -167,7 +167,7 @@
             else if ([line rangeOfString:@"DOMAIN_MAX"].location != NSNotFound) {
                 passthroughFileOptions[@"fileTypeVariant"] = @"Iridas/Adobe";
                 if (data[@"inputUpperBound"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"Input Bound already defined."
                                                  userInfo:nil];
                 }
@@ -176,7 +176,7 @@
                     data[@"inputUpperBound"] = @([splitLine[1] doubleValue]);
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"CubeParserError"
                                                    reason:@"DOMAIN_MAX invalid."
                                                  userInfo:nil];
                 }
@@ -192,7 +192,7 @@
     NSUInteger cubeSize;
 
     if (data[@"cubeSize"] == nil) {
-        NSException *exception = [NSException exceptionWithName:@"CubeLUTParseError" reason:@"Couldn't find LUT size in file" userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"CubeParserError" reason:@"Couldn't find LUT size in file" userInfo:nil];
         @throw exception;
     }
     else{
@@ -200,7 +200,7 @@
     }
 
     if ((isLUT1D && isLUT3D) || (!isLUT1D && !isLUT3D)){
-        @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:@"Couldn't figure out if 3D or 1D LUT" userInfo:nil];
+        @throw [NSException exceptionWithName:@"CubeParserError" reason:@"Couldn't figure out if 3D or 1D LUT" userInfo:nil];
     }
 
     double inputLowerBound;
@@ -246,7 +246,7 @@
                 if (splitLine.count == 3) {
                     for(NSString *checkLine in splitLine){
                         if(stringIsValidNumber(checkLine) == NO){
-                            @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
+                            @throw [NSException exceptionWithName:@"CubeParserError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
                         }
                     }
 
@@ -268,7 +268,7 @@
             }
         }
         if(currentCubeIndex < cubeSize*cubeSize*cubeSize){
-            @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:@"Incomplete data lines" userInfo:nil];
+            @throw [NSException exceptionWithName:@"CubeParserError" reason:@"Incomplete data lines" userInfo:nil];
         }
     }
     else{
@@ -284,7 +284,7 @@
 
                     for(NSString *checkLine in splitLine){
                         if(stringIsValidNumber(checkLine) == NO){
-                            @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentLineIndex+(int)cubeLinesStartIndex] userInfo:nil];
+                            @throw [NSException exceptionWithName:@"CubeParserError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentLineIndex+(int)cubeLinesStartIndex] userInfo:nil];
                         }
                     }
 
@@ -302,7 +302,7 @@
             }
         }
         if(currentLineIndex < cubeSize){
-            @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:@"Incomplete data lines" userInfo:nil];
+            @throw [NSException exceptionWithName:@"CubeParserError" reason:@"Incomplete data lines" userInfo:nil];
         }
     }
 
@@ -316,7 +316,7 @@
 
 + (NSString *)stringFromLUT:(LUT *)lut withOptions:(NSDictionary *)options{
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"CubeLUTWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"CubeWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
     else{
         options = options[[self formatterID]];

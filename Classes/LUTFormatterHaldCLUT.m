@@ -43,7 +43,7 @@
     LUT3D *lut3D = (LUT3D *)lut;
 
     if (sqrt(lut3D.size) != (double)((int)sqrt(lut3D.size))) {
-        @throw [NSException exceptionWithName:@"HaldCLUTWriteError"
+        @throw [NSException exceptionWithName:@"HaldCLUTWriterError"
                                        reason:@"LUT size must be a whole number when square-rooted." userInfo:nil];
     }
 
@@ -85,13 +85,13 @@
     NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:[image TIFFRepresentation]];
 
     if (imageRep.pixelsWide != imageRep.pixelsHigh) {
-        @throw [NSException exceptionWithName:@"HaldCLUTReadError"
+        @throw [NSException exceptionWithName:@"HaldCLUTReaderError"
                                        reason:@"Image width must be the same as the image height." userInfo:nil];
     }
 
     int lutSize = round(pow(pow(imageRep.pixelsWide, 2.0), 1.0/3.0));
     if (sqrt(lutSize) != (double)((int)sqrt(lutSize))) {
-        @throw [NSException exceptionWithName:@"HaldCLUTReadError"
+        @throw [NSException exceptionWithName:@"HaldCLUTReaderError"
                                        reason:@"LUT Size isn't square-rootable." userInfo:nil];
     }
 

@@ -37,7 +37,7 @@
 
 + (NSData *)dataFromLUT:(LUT *)lut withOptions:(NSDictionary *)options {
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"ImageBasedWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"ImageBasedWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
 
     NSDictionary *exposedOptions = options[[self formatterID]];
@@ -67,7 +67,7 @@
 
 +(LUT *)LUTFromURL:(NSURL *)fileURL{
     if(![[self fileExtensions] containsObject:[fileURL pathExtension].lowercaseString]){
-        @throw [NSException exceptionWithName:@"ImageBasedReadError"
+        @throw [NSException exceptionWithName:@"ImageBasedReaderError"
                                        reason:@"Invalid file extension." userInfo:nil];
 
     }

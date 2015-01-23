@@ -82,7 +82,7 @@
 
 
     if (imageRep.pixelsWide != imageRep.pixelsHigh * imageRep.pixelsHigh) {
-        @throw [NSException exceptionWithName:@"UnwrappedTextureReadError"
+        @throw [NSException exceptionWithName:@"UnwrappedTextureReaderError"
                                                          reason:@"Image width must be the square of the image height." userInfo:nil];
     }
 

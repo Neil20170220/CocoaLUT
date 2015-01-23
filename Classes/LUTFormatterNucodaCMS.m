@@ -47,7 +47,7 @@
         if([line rangeOfString:@"#"].location == NSNotFound){
             if ([line rangeOfString:@"NUCODA_3D_CUBE"].location != NSNotFound) {
                 if (data[@"version"] != nil){
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"Version parameter read already once."
                                                  userInfo:nil];
                 }
@@ -56,7 +56,7 @@
 
                 if(splitLine.count == 2 && stringIsValidNumber(splitLine[1])){
                     if ([splitLine[1] integerValue] < 1 || [splitLine[1] integerValue] > 3) {
-                        @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                        @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                        reason:@"Version must be 1, 2, or 3."
                                                      userInfo:nil];
                     }
@@ -64,14 +64,14 @@
 
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"Version parameter is invalid."
                                                  userInfo:nil];
                 }
             }
             if ([line rangeOfString:@"LUT_3D_SIZE"].location != NSNotFound) {
                 if (data[@"lut3DSize"] != nil){
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"3D Size parameter read already once."
                                                  userInfo:nil];
                 }
@@ -85,7 +85,7 @@
 
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"1D Size parameter is invalid."
                                                  userInfo:nil];
                 }
@@ -93,7 +93,7 @@
             else if ([line rangeOfString:@"LUT_1D_SIZE"].location != NSNotFound) {
 
                 if (data[@"lut1DSize"] != nil){
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"1D Size parameter read already once."
                                                  userInfo:nil];
                 }
@@ -105,14 +105,14 @@
 
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"Size parameter is invalid."
                                                  userInfo:nil];
                 }
             }
             else if ([line rangeOfString:@"LUT_3D_INPUT_RANGE"].location != NSNotFound) {
                 if (data[@"lut3DInputLowerBound"] != nil || data[@"lut3DInputUpperBound"] != nil){
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"3D Input Bounds already defined."
                                                  userInfo:nil];
                 }
@@ -123,14 +123,14 @@
                     data[@"lut3DInputUpperBound"] = @([splitLine[2] doubleValue]);
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"3D INPUT_RANGE invalid."
                                                  userInfo:nil];
                 }
             }
             else if ([line rangeOfString:@"LUT_1D_INPUT_RANGE"].location != NSNotFound) {
                 if (data[@"lut1DInputLowerBound"] != nil || data[@"lut1DInputUpperBound"] != nil){
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"1D Input Bounds already defined."
                                                  userInfo:nil];
                 }
@@ -141,7 +141,7 @@
                     data[@"lut1DInputUpperBound"] = @([splitLine[2] doubleValue]);
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"NucodaLUTParseError"
+                    @throw [NSException exceptionWithName:@"NucodaCMSParserError"
                                                    reason:@"INPUT_RANGE invalid."
                                                  userInfo:nil];
                 }
@@ -178,14 +178,14 @@
     if (nucodaVersion == 3) {
         if (use1D) {
             if (data[@"lut1DInputLowerBound"] == nil || data[@"lut1DInputUpperBound"] == nil) {
-                @throw [NSException exceptionWithName:@"NucodaLUTParseError" reason:@"Couldn't find 1D Input Bounds" userInfo:nil];
+                @throw [NSException exceptionWithName:@"NucodaCMSParserError" reason:@"Couldn't find 1D Input Bounds" userInfo:nil];
             }
             lut1DInputLowerBound = [data[@"lut1DInputLowerBound"] doubleValue];
             lut1DInputUpperBound = [data[@"lut1DInputUpperBound"] doubleValue];
         }
         if (use3D) {
             if (data[@"lut3DInputLowerBound"] == nil || data[@"lut3DInputUpperBound"] == nil) {
-                @throw [NSException exceptionWithName:@"NucodaLUTParseError" reason:@"Couldn't find 3D Input Bounds" userInfo:nil];
+                @throw [NSException exceptionWithName:@"NucodaCMSParserError" reason:@"Couldn't find 3D Input Bounds" userInfo:nil];
             }
             lut3DInputLowerBound = [data[@"lut3DInputLowerBound"] doubleValue];
             lut3DInputUpperBound = [data[@"lut3DInputUpperBound"] doubleValue];
@@ -269,7 +269,7 @@
             if (splitLine.count == 3) {
                 for(NSString *checkLine in splitLine){
                     if(stringIsValidNumber(checkLine) == NO){
-                        @throw [NSException exceptionWithName:@"NucodaLUTParseError" reason:[NSString stringWithFormat:@"NaN detected at 1D line %i", (int)currentLUTLineIndex] userInfo:nil];
+                        @throw [NSException exceptionWithName:@"NucodaCMSParserError" reason:[NSString stringWithFormat:@"NaN detected at 1D line %i", (int)currentLUTLineIndex] userInfo:nil];
                     }
                 }
 
@@ -289,7 +289,7 @@
         }
     }
     if(currentLUTLineIndex < lut1D.size){
-        @throw [NSException exceptionWithName:@"NucodaLUTParseError" reason:@"Incomplete data lines in 1D" userInfo:nil];
+        @throw [NSException exceptionWithName:@"NucodaCMSParserError" reason:@"Incomplete data lines in 1D" userInfo:nil];
     }
 
     return lut1D;
@@ -305,7 +305,7 @@
             if (splitLine.count == 3) {
                 for(NSString *checkLine in splitLine){
                     if(stringIsValidNumber(checkLine) == NO){
-                        @throw [NSException exceptionWithName:@"NucodaLUTParseError" reason:[NSString stringWithFormat:@"NaN detected at 3D line %i", (int)currentLUTLineIndex] userInfo:nil];
+                        @throw [NSException exceptionWithName:@"NucodaCMSParserError" reason:[NSString stringWithFormat:@"NaN detected at 3D line %i", (int)currentLUTLineIndex] userInfo:nil];
                     }
                 }
 
@@ -327,7 +327,7 @@
         }
     }
     if(currentLUTLineIndex < lut3D.size){
-        @throw [NSException exceptionWithName:@"NucodaLUTParseError" reason:@"Incomplete data lines in 3D" userInfo:nil];
+        @throw [NSException exceptionWithName:@"NucodaCMSParserError" reason:@"Incomplete data lines in 3D" userInfo:nil];
     }
 
     return lut3D;
@@ -372,7 +372,7 @@
 
 + (NSString *)stringFromLUT:(LUT *)lut withOptions:(NSDictionary *)options{
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"CubeLUTWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"NucodaCMSWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
     else{
         options = options[[self formatterID]];

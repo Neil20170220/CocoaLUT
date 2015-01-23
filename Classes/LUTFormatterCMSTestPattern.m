@@ -86,7 +86,7 @@
     int width  = ceil(((double)pow(cubeSize,3))/(double)height);
 
     if (imageRep.pixelsWide != width*7 || imageRep.pixelsHigh != height*7) {
-        NSException *exception = [NSException exceptionWithName:@"CMSTestPatternReadError"
+        NSException *exception = [NSException exceptionWithName:@"CMSTestPatternParserError"
                                                          reason:@"Image dimensions don't conform to spec." userInfo:nil];
         @throw exception;
     }

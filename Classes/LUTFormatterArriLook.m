@@ -21,7 +21,7 @@
     NSDictionary *xml = [NSDictionary dictionaryWithXMLData:data];
 
     if(![[xml attributes][@"version"] isEqualToString:@"1.0"]){
-        @throw [NSException exceptionWithName:@"LUTFormatterArriLookParseError" reason:@"Arri Look Version not 1.0" userInfo:nil];
+        @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Arri Look Version not 1.0" userInfo:nil];
     }
 
     NSArray *toneMapLines = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([[xml valueForKeyPath:@"ToneMapLut"] innerText]);
@@ -30,7 +30,7 @@
 
     for (NSString *line in toneMapLines){
         if([line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].count > 1){
-           @throw [NSException exceptionWithName:@"LUTFormatterArriLookParseError" reason:@"Tone Map Value invalid" userInfo:nil];
+           @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Tone Map Value invalid" userInfo:nil];
         }
 
         if(stringIsValidNumber(line) == NO){
@@ -41,7 +41,7 @@
     }
 
     if(curve1D.count !=  [[xml valueForKeyPath:@"ToneMapLut._rows"] integerValue]){
-        @throw [NSException exceptionWithName:@"LUTFormatterArriLookParseError" reason:@"Number of tonemap lines != rows value!" userInfo:nil];
+        @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Number of tonemap lines != rows value!" userInfo:nil];
     }
 
 

@@ -91,7 +91,7 @@ struct LUTFormatterFSIDAT_FileHeader{
 
     }
     else{
-        @throw [NSException exceptionWithName:@"FSIDATLUTReadError" reason:@"Incompatible Version" userInfo:nil];
+        @throw [NSException exceptionWithName:@"FSIDATParserError" reason:@"Incompatible Version" userInfo:nil];
     }
     
     NSString *nameString = [NSString stringWithCString:fileHeader.name encoding:NSUTF8StringEncoding] ?: @"";
@@ -115,7 +115,7 @@ struct LUTFormatterFSIDAT_FileHeader{
 
 + (NSData *)dataFromLUT:(LUT *)lut withOptions:(NSDictionary *)options{
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"FSIDATLUTWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"FSIDATWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
     else{
         options = options[[self formatterID]];
@@ -133,7 +133,7 @@ struct LUTFormatterFSIDAT_FileHeader{
 + (NSData *)dataFromLUTv2:(LUT *)lut withOptions:(NSDictionary *)options{
     //pack LUT in bytes
     if (lut.size != 17) {
-        @throw [NSException exceptionWithName:@"FSIDATLUTWriteError" reason:@"LUT is not size 17" userInfo:nil];
+        @throw [NSException exceptionWithName:@"FSIDATWriterError" reason:@"LUT is not size 17" userInfo:nil];
     }
     unsigned int *lutBytes = malloc(17*17*17*4);
 
@@ -205,7 +205,7 @@ struct LUTFormatterFSIDAT_FileHeader{
 
 + (NSData *)dataFromLUTv1:(LUT *)lut withOptions:(NSDictionary *)options{
     if (lut.size != 64) {
-        @throw [NSException exceptionWithName:@"FSIDATLUTWriteError" reason:@"LUT is not size 64" userInfo:nil];
+        @throw [NSException exceptionWithName:@"FSIDATWriterError" reason:@"LUT is not size 64" userInfo:nil];
     }
     //pack LUT in bytes
     unsigned int *lutBytes = malloc(64*64*64*4);
