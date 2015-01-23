@@ -25,7 +25,7 @@
     NSUInteger cubeLinesStartIndex = findFirstLUTLineInLines(lines, @" ", 3, 0);
 
     if(cubeLinesStartIndex == -1){
-        @throw [NSException exceptionWithName:@"3DLReadError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
+        @throw [NSException exceptionWithName:@"3DLParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
     }
 
     NSArray *headerLines = [lines subarrayWithRange:NSMakeRange(0, cubeLinesStartIndex)];
@@ -62,7 +62,7 @@
     }
 
     if (cubeSize <= 0 || integerMaxOutput <= 0) {
-        NSException *exception = [NSException exceptionWithName:@"3DLReadError" reason:@"Size or Max Output invalid." userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"3DLParserError" reason:@"Size or Max Output invalid." userInfo:nil];
         @throw exception;
     }
 
@@ -82,7 +82,7 @@
 
                 for(NSString *checkLine in splitLine){
                     if(stringIsValidNumber(checkLine) == NO){
-                        @throw [NSException exceptionWithName:@"3DLReadError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
+                        @throw [NSException exceptionWithName:@"3DLParserError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
                     }
                 }
 
@@ -105,7 +105,7 @@
     }
 
     if(currentCubeIndex < cubeSize*cubeSize*cubeSize){
-        @throw [NSException exceptionWithName:@"3DLReadError" reason:@"Incomplete data lines" userInfo:nil];
+        @throw [NSException exceptionWithName:@"3DLParserError" reason:@"Incomplete data lines" userInfo:nil];
     }
 
     [lut setMetadata:metadata];
@@ -120,7 +120,7 @@
     NSMutableString *string = [NSMutableString stringWithString:@""];
 
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"3DLWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"3DLWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
     else{
         options = options[[self formatterID]];
@@ -158,7 +158,7 @@
     else if([fileTypeVariant isEqualToString:@"Lustre"]){
         double sizeToDepth = log2(lutSize-1);
         if(sizeToDepth != (int)sizeToDepth){
-            NSException *exception = [NSException exceptionWithName:@"LUTFormatter3DLError" reason:@"Lustre lut size invalid. Size must be 2^x + 1" userInfo:nil];
+            NSException *exception = [NSException exceptionWithName:@"3DLWriterError" reason:@"Lustre lut size invalid. Size must be 2^x + 1" userInfo:nil];
             @throw exception;
 
         }

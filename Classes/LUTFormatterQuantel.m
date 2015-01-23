@@ -25,7 +25,7 @@
     NSInteger cubeLinesStartIndex = findFirstLUTLineInLines(lines, @" ", 3, 0);
 
     if(cubeLinesStartIndex == -1){
-        @throw [NSException exceptionWithName:@"3DLReadError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
+        @throw [NSException exceptionWithName:@"QuantelParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
     }
 
     NSArray *headerLines = [lines subarrayWithRange:NSMakeRange(0, cubeLinesStartIndex)];
@@ -43,7 +43,7 @@
     }
 
     if (cubeSize <= 0 || integerMaxOutput <= 0) {
-        NSException *exception = [NSException exceptionWithName:@"QuantelReadError" reason:@"Size or Max Output invalid." userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"QuantelParserError" reason:@"Size or Max Output invalid." userInfo:nil];
         @throw exception;
     }
 
@@ -63,7 +63,7 @@
 
                 for(NSString *checkLine in splitLine){
                     if(stringIsValidNumber(checkLine) == NO){
-                        @throw [NSException exceptionWithName:@"QuantelReadError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
+                        @throw [NSException exceptionWithName:@"QuantelParserError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
                     }
                 }
 
@@ -90,7 +90,7 @@
 
 +(NSString *)stringFromLUT:(LUT *)lut withOptions:(NSDictionary *)options{
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"QuantelWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"QuantelWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
     else{
         options = options[[self formatterID]];

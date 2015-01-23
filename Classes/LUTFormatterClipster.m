@@ -45,7 +45,7 @@
 
                 for(NSString *checkLine in splitLine){
                     if(stringIsValidNumber(checkLine) == NO){
-                        @throw [NSException exceptionWithName:@"3DLReadError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex] userInfo:nil];
+                        @throw [NSException exceptionWithName:@"ClipsterParserError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex] userInfo:nil];
                     }
                 }
 
@@ -75,7 +75,7 @@
 
 +(NSString *)stringFromLUT:(LUT *)lut withOptions:(NSDictionary *)options{
     if(![self optionsAreValid:options]){
-        @throw [NSException exceptionWithName:@"ClipsterWriteError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
+        @throw [NSException exceptionWithName:@"ClipsterWriterError" reason:[NSString stringWithFormat:@"Options don't pass the spec: %@", options] userInfo:nil];
     }
     else{
         options = options[[self formatterID]];

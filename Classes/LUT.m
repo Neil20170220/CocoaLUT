@@ -19,6 +19,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.metadata = [NSMutableDictionary dictionary];
+        self.userInfo = [NSMutableDictionary dictionary];
         self.passthroughFileOptions = @{};
     }
     return self;
@@ -28,6 +29,7 @@
     if (self = [super init]) {
         
         self.metadata = [aDecoder decodeObjectForKey:@"metadata"];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"]?:[NSMutableDictionary dictionary];
         self.passthroughFileOptions = [aDecoder decodeObjectForKey:@"passthroughFileOptions"];
         self.size = [aDecoder decodeIntegerForKey:@"size"];
         self.inputLowerBound = [aDecoder decodeDoubleForKey:@"inputLowerBound"];
@@ -42,6 +44,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.metadata forKey:@"metadata"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
     [aCoder encodeObject:self.passthroughFileOptions forKey:@"passthroughFileOptions"];
     [aCoder encodeInteger:self.size forKey:@"size"];
     [aCoder encodeDouble:self.inputLowerBound forKey:@"inputLowerBound"];
@@ -57,6 +60,7 @@
         }
         self.metadata = [NSMutableDictionary dictionary];
         self.passthroughFileOptions = [NSDictionary dictionary];
+        self.userInfo = [NSMutableDictionary dictionary];
         self.size = size;
         self.inputLowerBound = inputLowerBound;
         self.inputUpperBound = inputUpperBound;
@@ -67,9 +71,11 @@
 + (instancetype)LUTFromURL:(NSURL *)url error:(NSError * __autoreleasing *)error{
     LUTFormatter *formatter = [LUTFormatter LUTFormatterValidForReadingURL:url];
     if(formatter == nil){
-        *error = [NSError errorWithDomain:LUTErrorDomain
-                                     code:LUTErrorLUTCouldNotBeRead
-                                 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
+        if (error) {
+            *error = [NSError errorWithDomain:LUTErrorDomain
+                                         code:LUTErrorLUTCouldNotBeRead
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
+        }
         return nil;
     }
     LUT *lut;
@@ -80,7 +86,7 @@
         if (error) {
             *error = [NSError errorWithDomain:LUTErrorDomain
                                          code:LUTErrorLUTCouldNotBeRead
-                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason?:@"Unknown", nil), @"errorName":exception.name?:@"Unknown"}];
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason?:@"Unknown", nil), @"errorName":exception.name?:@"Unknown", @"lutFormatterName":[formatter.class formatterName]}];
         }
         return nil;
     }
@@ -93,6 +99,11 @@
 {
     LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:formatterID];
     if(formatter == nil){
+        if (error) {
+            *error = [NSError errorWithDomain:LUTErrorDomain
+                                         code:LUTErrorLUTCouldNotBeRead
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
+        }
         return nil;
     }
     
@@ -104,7 +115,7 @@
         if (error) {
             *error = [NSError errorWithDomain:LUTErrorDomain
                                          code:LUTErrorLUTCouldNotBeRead
-                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason, nil)?:NSLocalizedString(@"Unknown", nil), @"errorName":exception.name?:@"Unknown"}];
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason, nil)?:NSLocalizedString(@"Unknown", nil), @"errorName":exception.name?:@"Unknown", @"lutFormatterName":[formatter.class formatterName]}];
         }
         return nil;
     }
@@ -212,6 +223,7 @@
     self.title = [lut.title copy];
     self.descriptionText = [lut.descriptionText copy];
     self.metadata = [lut.metadata mutableCopy];
+    self.userInfo = [lut.userInfo mutableCopy];
     self.passthroughFileOptions = [lut.passthroughFileOptions copy];
 }
 
@@ -677,6 +689,7 @@
 - (id)copyWithZone:(NSZone *)zone {
     LUT *copiedLUT = [[self class] LUTOfSize:[self size] inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
     [copiedLUT setMetadata:[[self metadata] mutableCopyWithZone:zone]];
+    [copiedLUT setUserInfo:[self.userInfo mutableCopyWithZone:zone]];
     copiedLUT.descriptionText = [[self descriptionText] mutableCopyWithZone:zone];
     [copiedLUT setTitle:[[self title] mutableCopyWithZone:zone]];
     [copiedLUT setPassthroughFileOptions:[[self passthroughFileOptions] mutableCopyWithZone:zone]];

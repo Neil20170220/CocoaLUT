@@ -33,7 +33,7 @@
 
                 }
                 else{
-                    @throw [NSException exceptionWithName:@"CubeLUTParseError"
+                    @throw [NSException exceptionWithName:@"ResolveDATParserError"
                                                    reason:@"Size parameter is invalid."
                                                  userInfo:nil];
                 }
@@ -56,7 +56,7 @@
             if (splitLine.count == 3) {
                 for(NSString *checkLine in splitLine){
                     if(stringIsValidNumber(checkLine) == NO){
-                        @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
+                        @throw [NSException exceptionWithName:@"ResolveDATParserError" reason:[NSString stringWithFormat:@"NaN detected at line %i", (int)currentCubeIndex+(int)cubeLinesStartIndex] userInfo:nil];
                     }
                 }
 
@@ -78,7 +78,7 @@
         }
     }
     if(currentCubeIndex < cubeSize*cubeSize*cubeSize){
-        @throw [NSException exceptionWithName:@"CubeLUTParseError" reason:@"Incomplete data lines" userInfo:nil];
+        @throw [NSException exceptionWithName:@"ResolveDATParserError" reason:@"Incomplete data lines" userInfo:nil];
     }
 
 
