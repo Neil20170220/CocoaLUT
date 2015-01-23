@@ -19,6 +19,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.metadata = [NSMutableDictionary dictionary];
+        self.userInfo = [NSMutableDictionary dictionary];
         self.passthroughFileOptions = @{};
     }
     return self;
@@ -28,6 +29,7 @@
     if (self = [super init]) {
         
         self.metadata = [aDecoder decodeObjectForKey:@"metadata"];
+        self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"]?:[NSMutableDictionary dictionary];
         self.passthroughFileOptions = [aDecoder decodeObjectForKey:@"passthroughFileOptions"];
         self.size = [aDecoder decodeIntegerForKey:@"size"];
         self.inputLowerBound = [aDecoder decodeDoubleForKey:@"inputLowerBound"];
@@ -42,6 +44,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.metadata forKey:@"metadata"];
+    [aCoder encodeObject:self.userInfo forKey:@"userInfo"];
     [aCoder encodeObject:self.passthroughFileOptions forKey:@"passthroughFileOptions"];
     [aCoder encodeInteger:self.size forKey:@"size"];
     [aCoder encodeDouble:self.inputLowerBound forKey:@"inputLowerBound"];
@@ -57,6 +60,7 @@
         }
         self.metadata = [NSMutableDictionary dictionary];
         self.passthroughFileOptions = [NSDictionary dictionary];
+        self.userInfo = [NSMutableDictionary dictionary];
         self.size = size;
         self.inputLowerBound = inputLowerBound;
         self.inputUpperBound = inputUpperBound;
@@ -219,6 +223,7 @@
     self.title = [lut.title copy];
     self.descriptionText = [lut.descriptionText copy];
     self.metadata = [lut.metadata mutableCopy];
+    self.userInfo = [lut.userInfo mutableCopy];
     self.passthroughFileOptions = [lut.passthroughFileOptions copy];
 }
 
@@ -686,6 +691,7 @@
 - (id)copyWithZone:(NSZone *)zone {
     LUT *copiedLUT = [[self class] LUTOfSize:[self size] inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
     [copiedLUT setMetadata:[[self metadata] mutableCopyWithZone:zone]];
+    [copiedLUT setUserInfo:[self.userInfo mutableCopyWithZone:zone]];
     copiedLUT.descriptionText = [[self descriptionText] mutableCopyWithZone:zone];
     [copiedLUT setTitle:[[self title] mutableCopyWithZone:zone]];
     [copiedLUT setPassthroughFileOptions:[[self passthroughFileOptions] mutableCopyWithZone:zone]];
