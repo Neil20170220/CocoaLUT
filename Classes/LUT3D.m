@@ -135,7 +135,7 @@
 - (LUT *)LUTByCombiningWithLUT:(LUT *)otherLUT {
     if (self.size == otherLUT.size) {
         //fast if they are the same size
-        LUT3D *newLUT = [LUT3D LUTOfSize:[self size] inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
+        LUT3D *newLUT = [LUT3D LUTOfSize:self.size inputLowerBound:self.inputLowerBound inputUpperBound:self.inputUpperBound];
         [newLUT copyMetaPropertiesFromLUT:self];
         
         [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
@@ -149,7 +149,7 @@
     else{
         NSUInteger outputSize = MIN(MAX(self.size, otherLUT.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE);
         
-        LUT3D *newLUT = [LUT3D LUTOfSize:outputSize inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
+        LUT3D *newLUT = [LUT3D LUTOfSize:outputSize inputLowerBound:self.inputLowerBound inputUpperBound:self.inputUpperBound];
         [newLUT copyMetaPropertiesFromLUT:self];
         
         [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
