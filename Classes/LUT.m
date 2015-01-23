@@ -67,9 +67,11 @@
 + (instancetype)LUTFromURL:(NSURL *)url error:(NSError * __autoreleasing *)error{
     LUTFormatter *formatter = [LUTFormatter LUTFormatterValidForReadingURL:url];
     if(formatter == nil){
-        *error = [NSError errorWithDomain:LUTErrorDomain
-                                     code:LUTErrorLUTCouldNotBeRead
-                                 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
+        if (error) {
+            *error = [NSError errorWithDomain:LUTErrorDomain
+                                         code:LUTErrorLUTCouldNotBeRead
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
+        }
         return nil;
     }
     LUT *lut;
@@ -80,7 +82,7 @@
         if (error) {
             *error = [NSError errorWithDomain:LUTErrorDomain
                                          code:LUTErrorLUTCouldNotBeRead
-                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason?:@"Unknown", nil), @"errorName":exception.name?:@"Unknown"}];
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason?:@"Unknown", nil), @"errorName":exception.name?:@"Unknown", @"lutFormatterName":[formatter.class formatterName]}];
         }
         return nil;
     }
@@ -93,6 +95,11 @@
 {
     LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:formatterID];
     if(formatter == nil){
+        if (error) {
+            *error = [NSError errorWithDomain:LUTErrorDomain
+                                         code:LUTErrorLUTCouldNotBeRead
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
+        }
         return nil;
     }
     
@@ -104,7 +111,7 @@
         if (error) {
             *error = [NSError errorWithDomain:LUTErrorDomain
                                          code:LUTErrorLUTCouldNotBeRead
-                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason, nil)?:NSLocalizedString(@"Unknown", nil), @"errorName":exception.name?:@"Unknown"}];
+                                     userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(exception.reason, nil)?:NSLocalizedString(@"Unknown", nil), @"errorName":exception.name?:@"Unknown", @"lutFormatterName":[formatter.class formatterName]}];
         }
         return nil;
     }
