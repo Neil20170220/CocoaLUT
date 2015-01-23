@@ -121,10 +121,10 @@
 - (LUT *)LUTByCombiningWithLUT:(LUT *)otherLUT{
     LUT *combinedLUT;
     if(isLUT1D(otherLUT)){
-        combinedLUT = [LUT1D LUTOfSize:[self size] inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
+        combinedLUT = [LUT1D LUTOfSize:self.size inputLowerBound:self.inputLowerBound inputUpperBound:self.inputUpperBound];
     }
     else{
-        combinedLUT = [LUT3D LUTOfSize:[otherLUT size] inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
+        combinedLUT = [LUT3D LUTOfSize:MIN(MAX(otherLUT.size, self.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE) inputLowerBound:self.inputLowerBound inputUpperBound:self.inputUpperBound];
     }
     [combinedLUT copyMetaPropertiesFromLUT:self];
 
