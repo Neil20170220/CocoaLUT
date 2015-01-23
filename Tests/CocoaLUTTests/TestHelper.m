@@ -11,7 +11,7 @@
 @implementation TestHelper
 
 + (LUT *)loadLUT:(NSString *)name extension:(NSString *)ext {
-    return [LUT LUTFromURL:[[NSBundle bundleForClass: [self class]] URLForResource:name withExtension:ext]];
+    return [LUT LUTFromURL:[[NSBundle bundleForClass: [self class]] URLForResource:name withExtension:ext] error:nil];
 }
 
 @end

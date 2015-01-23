@@ -29,10 +29,6 @@
 
 @implementation ReadWriteTests
 
-- (LUT *)loadLUT:(NSString *)name extension:(NSString *)ext {
-    return [LUT LUTFromURL:[[NSBundle bundleForClass: [self class]] URLForResource:name withExtension:ext]];
-}
-
 + (NSURL *)uniqueTempFileURLWithFileExtension:(NSString *)fileExtension{
     NSString *fileName = [NSString stringWithFormat:@"%@_%@", [[NSProcessInfo processInfo] globallyUniqueString], [NSString stringWithFormat:@"file.%@", fileExtension]];
     NSURL *fileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:fileName]];
@@ -71,7 +67,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -95,7 +91,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -119,7 +115,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -145,7 +141,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -171,7 +167,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -197,7 +193,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -223,7 +219,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -249,7 +245,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -275,7 +271,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -299,7 +295,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -325,7 +321,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -351,7 +347,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -375,7 +371,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
@@ -399,7 +395,7 @@
 
     XCTAssertEqual([LUTFormatter LUTFormatterValidForReadingURL:lutURL], [formatter class], @"LUT isn't recognized with the correct formatter.");
 
-    LUT *readLUT = [LUT LUTFromURL:lutURL];
+    LUT *readLUT = [LUT LUTFromURL:lutURL error:nil];
 
     [[NSFileManager defaultManager] removeItemAtURL:lutURL error:nil];
 
