@@ -48,10 +48,15 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 @property (assign) double inputLowerBound;
 @property (assign) double inputUpperBound;
 
+
+/**
+ *  A catch-all swap space for arbitrary data that needs to be carried along with the LUT.
+ *  Anything goes in here.
+ */
 @property (strong) NSMutableDictionary *userInfo;
 
 /**
- *  Arbitrary metadata.
+ *  Metadata from the LUT file (empty if LUT was created programatically).
  */
 @property (strong) NSMutableDictionary *metadata;
 
