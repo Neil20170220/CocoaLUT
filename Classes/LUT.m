@@ -720,7 +720,7 @@
 		cubeData[offset+3] = 1.0f;
 	}];
 	
-	*returnData = [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
+	*returnCubeData = [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
 	
 	return size;
 }
