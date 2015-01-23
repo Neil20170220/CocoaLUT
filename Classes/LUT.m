@@ -67,6 +67,9 @@
 + (instancetype)LUTFromURL:(NSURL *)url error:(NSError * __autoreleasing *)error{
     LUTFormatter *formatter = [LUTFormatter LUTFormatterValidForReadingURL:url];
     if(formatter == nil){
+        *error = [NSError errorWithDomain:LUTErrorDomain
+                                     code:LUTErrorLUTCouldNotBeRead
+                                 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"No suitable reader was found.", nil), @"errorName":@"LUTFormatterNotFound"}];
         return nil;
     }
     LUT *lut;

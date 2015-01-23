@@ -19,7 +19,7 @@ extern NSString * const LUTErrorDomain = @"co.videovillage.cocoalut";
  */
 enum
 {
-    LUTErrorLUTCouldNotBeRead
+    LUTErrorLUTCouldNotBeRead = -1
 };
 
 
