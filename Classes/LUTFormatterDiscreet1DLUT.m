@@ -65,7 +65,7 @@
 
     for(NSString *checkLine in trimmedLines){
         if(stringIsValidNumber(checkLine) == NO){
-            @throw [NSException exceptionWithName:@"LUTParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT"] userInfo:nil];
+            @throw [NSException exceptionWithName:@"LUTParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", checkLine] userInfo:nil];
         }
     }
 

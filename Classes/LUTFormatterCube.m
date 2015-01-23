@@ -29,7 +29,6 @@
 
     NSUInteger cubeLinesStartIndex = findFirstLUTLineInLinesWithWhitespaceSeparators(lines, 3, 0);
 
-
     if(cubeLinesStartIndex == NSNotFound){
         @throw [NSException exceptionWithName:@"LUTParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
     }
@@ -51,7 +50,7 @@
 
                 if (data[@"cubeSize"] != nil){
                     @throw [NSException exceptionWithName:@"CubeLUTParseError"
-                                                   reason:@"Size parameter already once."
+                                                   reason:@"Size parameter read already once."
                                                  userInfo:nil];
                 }
                 
@@ -70,7 +69,7 @@
 
                 if (data[@"cubeSize"] != nil){
                     @throw [NSException exceptionWithName:@"CubeLUTParseError"
-                                                   reason:@"Size parameter already once."
+                                                   reason:@"Size parameter read already once."
                                                  userInfo:nil];
                 }
 
