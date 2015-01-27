@@ -537,10 +537,6 @@
     NSUInteger sizeOfColorCubeFilter = clamp(self.size, 0, COCOALUT_MAX_CICOLORCUBE_SIZE);
     LUT3D *usedLUT = self.size==sizeOfColorCubeFilter?self:[self LUTByResizingToSize:sizeOfColorCubeFilter];
 
-    if (usedLUT.inputUpperBound - usedLUT.inputLowerBound != 1.0 && usedLUT.inputUpperBound - usedLUT.inputLowerBound < 2.0) {
-        usedLUT = [usedLUT LUTByChangingInputLowerBound:0 inputUpperBound:1];
-    }
-
     NSData *cubeData = [usedLUT lutDataRGBAf];
 
     CIFilter *colorCube;
