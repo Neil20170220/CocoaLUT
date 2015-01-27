@@ -117,6 +117,9 @@
                 usedImage = [[self.previewImage imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
                 usedLUT = [self.lut LUTByChangingInputLowerBound:[usedImage minimumSceneValue] inputUpperBound:[usedImage maximumSceneValue]];
             }
+            else if (usedLUT.inputLowerBound != 0 || usedLUT.inputUpperBound != 1){
+                usedLUT = [self.lut LUTByChangingInputLowerBound:0 inputUpperBound:1];
+            }
             #endif
             lutImage = [usedLUT processNSImage:usedImage renderPath:LUTImageRenderPathCoreImage];
         }
