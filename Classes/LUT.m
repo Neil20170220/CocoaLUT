@@ -10,6 +10,9 @@
 #import "CocoaLUT.h"
 #import "LUTFormatter.h"
 #import "LUTError.h"
+#if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
+#import <VVSceneLinearImageRep/NSImage+SceneLinear.h>
+#endif
 
 @interface LUT ()
 @end
@@ -742,19 +745,32 @@
 - (NSImage *)processNSImage:(NSImage *)image
                  renderPath:(LUTImageRenderPath)renderPath {
 
+    if (![image.representations.firstObject isKindOfClass:[NSBitmapImageRep class]]) {
+        return nil;
+    }
+
+    LUT *usedLUT;
+
+    #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
+    if ([image isSceneLinear]) {
+        image = [[image imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
+        usedLUT = [self LUTByChangingInputLowerBound:[image minimumSceneValue] inputUpperBound:[image maximumSceneValue]];
+    }
+    else {
+        usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
+    }
+    #else
+    usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
+    #endif
+
     if (renderPath == LUTImageRenderPathCoreImage || renderPath == LUTImageRenderPathCoreImageSoftware) {
-        NSImageRep *firstRep = [image.representations firstObject];
 
-        if (![firstRep isKindOfClass:[NSBitmapImageRep class]]) {
-            return nil;
-        }
-
-        CIImage *inputCIImage = [[CIImage alloc] initWithBitmapImageRep:(NSBitmapImageRep *)firstRep];
-        CIImage *outputCIImage = [self processCIImage:inputCIImage];
+        CIImage *inputCIImage = [[CIImage alloc] initWithBitmapImageRep:(NSBitmapImageRep *)image.representations.firstObject];
+        CIImage *outputCIImage = [usedLUT processCIImage:inputCIImage];
         return LUTNSImageFromCIImage(outputCIImage, renderPath == LUTImageRenderPathCoreImageSoftware);
     }
     else if (renderPath == LUTImageRenderPathDirect) {
-        return [self processNSImageDirectly:image];
+        return [usedLUT processNSImageDirectly:image];
     }
 
     return nil;
