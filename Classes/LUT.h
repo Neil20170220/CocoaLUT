@@ -205,15 +205,6 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 - (void)setColor:(LUTColor *)color r:(NSUInteger)r g:(NSUInteger)g b:(NSUInteger)b;
 
 /**
- *	returns the size of CIColorCube data associated with the LUT
- *
- *	@param a nil pointer to an NSData object that will be filled with formatted CIColorCube data
- *
- *	@return the size of the LUT's ColorCube Data
- **/
-- (size_t) LUTCubeData: (NSData **)returnCubeData;
-
-/**
  *  Returns a Core Image filter that will apply the receiver's transformation in a particular color space.
  *
  *  @param colorSpace The desired color space to use on the filter. Pass `nil` to get a `CIFilter` of type `CIColorCube`.
@@ -230,6 +221,13 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
  *  @return A CIFilter of type `CIColorCubeWithColorSpace` or `CIColorCube`.
  */
 - (CIFilter *)coreImageFilterWithCurrentColorSpace;
+
+/**
+ *	Essentially returns a RGBAf bitmap image of the LUT.
+ *
+ *	@return A NSData object with RGBAf data of the LUT (red major if 3D)
+ **/
+- (NSData *)lutDataRGBAf;
 
 /**
  *  Returns a `CIImage` with the receiver's color transformation applied.

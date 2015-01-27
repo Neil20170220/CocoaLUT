@@ -381,6 +381,20 @@
     return newLUT;
 }
 
+- (NSData *)lutDataRGBAf{
+    size_t dataSize = sizeof(float)*4*self.size;
+    float* lutArray = (float *)malloc(dataSize);
+    for (int i = 0; i < self.size; i++) {
+        LUTColor *color = [self colorAtR:i g:i b:i];
+        lutArray[i*4] = clamp(color.red, 0, 1);
+        lutArray[i*4+1] = clamp(color.green, 0, 1);
+        lutArray[i*4+2] = clamp(color.blue, 0, 1);
+        lutArray[i*4+3] = 1.0;
+    }
+
+    return [NSData dataWithBytesNoCopy:lutArray length:dataSize];
+}
+
 - (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace{
     #if defined(COCOAPODS_POD_AVAILABLE_VVLUT1DFilter)
     LUT1D *usedLUT = self.size>COCOALUT_MAX_VVLUT1DFILTER_SIZE?[self LUTByResizingToSize:COCOALUT_MAX_VVLUT1DFILTER_SIZE]:self;
@@ -389,17 +403,7 @@
         usedLUT = [usedLUT LUTByChangingInputLowerBound:0 inputUpperBound:1];
     }
 
-    size_t dataSize = sizeof(float)*4*usedLUT.size;
-    float* lutArray = (float *)malloc(dataSize);
-    for (int i = 0; i < usedLUT.size; i++) {
-        LUTColor *color = [usedLUT colorAtR:i g:i b:i];
-        lutArray[i*4] = clamp(color.red, 0, 1);
-        lutArray[i*4+1] = clamp(color.green, 0, 1);
-        lutArray[i*4+2] = clamp(color.blue, 0, 1);
-        lutArray[i*4+3] = 1.0;
-    }
-
-    NSData *inputData = [NSData dataWithBytesNoCopy:lutArray length:dataSize];
+    NSData *inputData = [usedLUT lutDataRGBAf];
 
     CIFilter *lutFilter;
 
@@ -417,7 +421,7 @@
     return lutFilter;
 
     #else
-    return [super coreImageFilterWithColorSpace:colorSpace];
+    return [[self LUT3DOfSize:MIN(self.size, COCOALUT_SUGGESTED_MAX_LUT3D_SIZE)] coreImageFilterWithColorSpace:colorSpace];
     #endif
 }
 

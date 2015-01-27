@@ -696,35 +696,6 @@
     return copiedLUT;
 }
 
-- (size_t) LUTCubeData: (NSData **)returnCubeData {
-	
-	NSUInteger sizeOfColorCubeFilter = clamp([self size], 0, COCOALUT_MAX_CICOLORCUBE_SIZE);
-	LUT3D *used3DLUT = LUTAsLUT3D(self, sizeOfColorCubeFilter);
-	
-	if (used3DLUT.inputUpperBound - used3DLUT.inputLowerBound != 1.0 && used3DLUT.inputUpperBound - used3DLUT.inputLowerBound < 2.0) {
-		used3DLUT = [used3DLUT LUTByChangingInputLowerBound:0 inputUpperBound:1];
-	}
-	
-	size_t size = [used3DLUT size];
-	size_t cubeDataSize = size * size * size * sizeof (float) * 4;
-	float *cubeData = (float *) malloc (cubeDataSize);
-	
-	[used3DLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
-		LUTColor *transformedColor = [used3DLUT colorAtR:r g:g b:b];
-		
-		size_t offset = 4*(b*size*size + g*size + r);
-		
-		cubeData[offset]   = (float)transformedColor.red;
-		cubeData[offset+1] = (float)transformedColor.green;
-		cubeData[offset+2] = (float)transformedColor.blue;
-		cubeData[offset+3] = 1.0f;
-	}];
-	
-	*returnCubeData = [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
-	
-	return size;
-}
-
 - (CIFilter *)coreImageFilterWithCurrentColorSpace {
     CIFilter *filter;
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
@@ -740,24 +711,12 @@
     return filter;
 }
 
-- (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace {
+- (NSData *)lutDataRGBAf{
+    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+}
 
-	NSData *cubeData = nil;
-	
-	size_t size = [self LUTCubeData: &cubeData];
-	
-    CIFilter *colorCube;
-    if (colorSpace) {
-        colorCube = [CIFilter filterWithName:@"CIColorCubeWithColorSpace"];
-        [colorCube setValue:(__bridge id)(colorSpace) forKey:@"inputColorSpace"];
-    }
-    else {
-        colorCube = [CIFilter filterWithName:@"CIColorCube"];
-    }
-    [colorCube setValue:@(size) forKey:@"inputCubeDimension"];
-    [colorCube setValue:cubeData forKey:@"inputCubeData"];
-    
-    return colorCube;
+- (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace {
+    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
 }
 
 - (CIImage *)processCIImage:(CIImage *)image {

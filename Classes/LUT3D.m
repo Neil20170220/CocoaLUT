@@ -514,6 +514,48 @@
     return tetraFinal;
 }
 
+- (NSData *)lutDataRGBAf {
+    size_t size = self.size;
+    size_t cubeDataSize = size * size * size * sizeof (float) * 4;
+    float *cubeData = (float *) malloc (cubeDataSize);
+
+    [self LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+        LUTColor *transformedColor = [self colorAtR:r g:g b:b];
+
+        size_t offset = 4*(b*size*size + g*size + r);
+
+        cubeData[offset]   = (float)transformedColor.red;
+        cubeData[offset+1] = (float)transformedColor.green;
+        cubeData[offset+2] = (float)transformedColor.blue;
+        cubeData[offset+3] = 1.0f;
+    }];
+
+    return [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
+}
+
+- (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace {
+    NSUInteger sizeOfColorCubeFilter = clamp(self.size, 0, COCOALUT_MAX_CICOLORCUBE_SIZE);
+    LUT3D *usedLUT = self.size==sizeOfColorCubeFilter?self:[self LUTByResizingToSize:sizeOfColorCubeFilter];
+
+    if (usedLUT.inputUpperBound - usedLUT.inputLowerBound != 1.0 && usedLUT.inputUpperBound - usedLUT.inputLowerBound < 2.0) {
+        usedLUT = [usedLUT LUTByChangingInputLowerBound:0 inputUpperBound:1];
+    }
+
+    NSData *cubeData = [usedLUT lutDataRGBAf];
+
+    CIFilter *colorCube;
+    if (colorSpace) {
+        colorCube = [CIFilter filterWithName:@"CIColorCubeWithColorSpace"];
+        [colorCube setValue:(__bridge id)(colorSpace) forKey:@"inputColorSpace"];
+    }
+    else {
+        colorCube = [CIFilter filterWithName:@"CIColorCube"];
+    }
+    [colorCube setValue:@(usedLUT.size) forKey:@"inputCubeDimension"];
+    [colorCube setValue:cubeData forKey:@"inputCubeData"];
+
+    return colorCube;
+}
 
 
 - (id)copyWithZone:(NSZone *)zone{
