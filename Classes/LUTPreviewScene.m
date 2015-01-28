@@ -12,8 +12,8 @@
 #define LATTICE_MAX_SIZE 18
 
 @interface LUTColorNode: SCNNode
-@property LUTColor *identityColor;
-@property (strong, nonatomic) LUTColor *transformedColor;
+@property (copy) LUTColor *identityColor;
+@property (copy, nonatomic) LUTColor *transformedColor;
 @property (assign, nonatomic) double animationPercentage;
 @property NSUInteger r;
 @property NSUInteger g;
