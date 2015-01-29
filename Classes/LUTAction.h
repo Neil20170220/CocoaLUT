@@ -76,6 +76,8 @@
 +(instancetype)actionWithLUTByScalingCurvesTo01;
 +(instancetype)actionWithLUTByScalingCurvesRGBTo01;
 
++(instancetype)actionWithLUTByMultiplyingByColor:(LUTColor *)color;
+
 +(instancetype)actionWithLUTByResizingToSize:(NSUInteger)size;
 
 +(instancetype)actionWithLUTByOffsettingWithColor:(LUTColor *)color;

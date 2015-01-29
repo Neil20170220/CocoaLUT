@@ -338,6 +338,17 @@
     
 }
 
+- (instancetype)LUTByMultiplyingByColor:(LUTColor *)color{
+    LUT *newLUT = [[self class] LUTOfSize:[self size] inputLowerBound:[self inputLowerBound] inputUpperBound:[self inputUpperBound]];
+    [newLUT copyMetaPropertiesFromLUT:self];
+    
+    [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+        [newLUT setColor:[[self colorAtR:r g:g b:b] colorByMultiplyingColor:color] r:r g:g b:b];
+    }];
+    
+    return newLUT;
+}
+
 - (instancetype)LUTByChangingStrength:(double)strength{
     if(strength > 1.0){
         @throw [NSException exceptionWithName:@"ChangeStrengthError" reason:[NSString stringWithFormat:@"You can't set the strength of the LUT past 1.0 (%f)", strength] userInfo:nil];

@@ -398,7 +398,19 @@
                        actionMetadata:actionMetadata];
 }
 
-
++(instancetype)actionWithLUTByMultiplyingByColor:(LUTColor *)color{
+    M13OrderedDictionary *actionMetadata =
+    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"Multiply"},
+                                                           @{@"redMultiply": @(color.red)},
+                                                           @{@"greenMultiply": @(color.green)},
+                                                           @{@"blueMultiply": @(color.blue)}]);
+    
+    return [LUTAction actionWithBlock:^LUT *(LUT *lut) {
+        return [lut LUTByMultiplyingByColor:color];
+    }
+                           actionName:[NSString stringWithFormat:@"Multiply with %@", [color stringFormattedWithFloatingPointLength:3]]
+                       actionMetadata:actionMetadata];
+}
 
 
 
