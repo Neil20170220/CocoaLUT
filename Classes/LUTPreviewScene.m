@@ -37,10 +37,20 @@
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 #elif TARGET_OS_MAC
+
+@interface LUTPreviewSceneViewController ()
+
+@property (assign) dispatch_queue_t serialDispatch;
+
+@end
+
 @implementation LUTPreviewSceneViewController
 
 - (void)setSceneWithLUT:(LUT *)lut{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    if (!self.serialDispatch) {
+        self.serialDispatch = dispatch_queue_create("LUTPreviewScene Serial Dispatch", DISPATCH_QUEUE_SERIAL);
+    }
+    dispatch_async(self.serialDispatch, ^{
 
         LUTPreviewScene *scene;
         double newAnimationPercentage = self.animationPercentage;
@@ -53,7 +63,7 @@
         }
 
 
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             ((SCNView *)self.view).scene = scene;
             self.animationPercentage = newAnimationPercentage;
         });
