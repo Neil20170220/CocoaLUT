@@ -774,6 +774,8 @@
     usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
     #endif
 
+    [((NSBitmapImageRep *)image.representations.firstObject) setColorSpaceName:NSDeviceRGBColorSpace]; //make sure to toss the embedded colorspace if it exists
+
     if (renderPath == LUTImageRenderPathCoreImage || renderPath == LUTImageRenderPathCoreImageSoftware) {
 
         CIImage *inputCIImage = [[CIImage alloc] initWithBitmapImageRep:(NSBitmapImageRep *)image.representations.firstObject];
