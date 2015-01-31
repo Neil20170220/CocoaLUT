@@ -12,6 +12,11 @@
 #import <VVSceneLinearImageRep/NSImage+SceneLinear.h>
 #endif
 
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#elif TARGET_OS_MAC
+#import "NSImage+CocoaLUT.h"
+#endif
+
 
 @interface LUTPreviewView () {}
 
@@ -96,7 +101,8 @@
 - (void)updateFilters {
     if (self.lut) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            CIFilter *filter = self.lut.coreImageFilterWithCurrentColorSpace;
+            CIFilter *filter = [self.lut coreImageFilterWithCurrentColorSpace];
+            //video layer filter always uses display's colorspace
             if (filter) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.lutVideoLayer.filters = @[filter];
@@ -107,14 +113,19 @@
 }
 
 - (void)updateImageViews {
+    if (!self.previewImage) {
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSImage *usedNormalImage = self.useImageEmbeddedColorspace?self.previewImage:[self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
         NSImage *lutImage = self.previewImage;
         if (self.lut && lutImage) {
-            NSImage *usedImage = self.previewImage;
-            LUT *usedLUT = self.lut;
-            lutImage = [usedLUT processNSImage:usedImage renderPath:LUTImageRenderPathCoreImage];
+            lutImage = [self.lut processNSImage:self.previewImage
+                     preserveEmbeddedColorSpace:self.useImageEmbeddedColorspace
+                                     renderPath:LUTImageRenderPathCoreImage];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.normalImageLayer.contents = usedNormalImage;
             self.lutImageLayer.contents = lutImage;
             #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
             self.normalImageLayer.contents = [self.previewImage isSceneLinear]?[self.previewImage imageInDeviceRGBColorSpace]:self.previewImage;
@@ -125,8 +136,29 @@
     });
 }
 
+- (void)setUseImageEmbeddedColorspace:(BOOL)useImageEmbeddedColorspace{
+    BOOL oldUseImageEmbeddedColorspace = self.useImageEmbeddedColorspace;
+    _useImageEmbeddedColorspace = useImageEmbeddedColorspace;
+
+    if (oldUseImageEmbeddedColorspace != self.useImageEmbeddedColorspace) {
+        dispatch_async(dispatch_get_current_queue(), ^{
+            [self updateImageViews];
+            [self updateFilters];
+        });
+    }
+
+}
+
 - (void)setPreviewImage:(NSImage *)previewImage {
     _previewImage = previewImage;
+
+    #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+    #elif TARGET_OS_MAC
+    if (!self.useImageEmbeddedColorspace) {
+        _previewImage = [self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
+    }
+    #endif
+
     if (_previewImage) {
         self.videoURL = nil;
     }
@@ -264,6 +296,8 @@
     self.normalVideoLayer.opaque = YES;
     [self.layer addSublayer:self.lutVideoLayer];
     [self.layer addSublayer:self.normalVideoLayer];
+
+    self.useImageEmbeddedColorspace = NO;
 
     [self setupPlaybackLayers];
 

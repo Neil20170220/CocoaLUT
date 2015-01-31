@@ -29,6 +29,7 @@
 
     NSImage *baseImage = [image copy];
     NSImage *processedImage = [self.lut processNSImage:[baseImage copy]
+                            preserveEmbeddedColorSpace:NO
                                             renderPath:LUTImageRenderPathCoreImage];
 
     CGSize targetSize = CGSizeProportionallyScaled(image.size, size);

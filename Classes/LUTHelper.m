@@ -357,7 +357,7 @@ NSString* FirstRegexMatch(NSString *text, NSString *pattern) {
     return [text substringWithRange:[match rangeAtIndex:1]];
 }
 
-NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer) {
+NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer, NSString *colorSpaceName) {
 
     [NSGraphicsContext saveGraphicsState];
 
@@ -373,12 +373,12 @@ NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer) {
                                                                samplesPerPixel:4
                                                                       hasAlpha:YES
                                                                       isPlanar:NO
-                                                                colorSpaceName:NSDeviceRGBColorSpace
+                                                                colorSpaceName:colorSpaceName
                                                                   bitmapFormat:0
                                                                    bytesPerRow:rowBytes
                                                                   bitsPerPixel:0];
 
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorSpaceRef colorSpace = ciImage.colorSpace;
     CGContextRef context = CGBitmapContextCreate([rep bitmapData],
                                                  width,
                                                  rows,
@@ -400,7 +400,6 @@ NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer) {
     NSImage *nsImage = [[NSImage alloc] initWithCGImage:cgImage size:ciImage.extent.size];
     CGImageRelease(cgImage);
 	CGContextRelease(context);
-	CGColorSpaceRelease(colorSpace);
 
     [NSGraphicsContext restoreGraphicsState];
 

@@ -14,6 +14,11 @@
 #import <VVSceneLinearImageRep/NSImage+SceneLinear.h>
 #endif
 
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#elif TARGET_OS_MAC
+#import "NSImage+CocoaLUT.h"
+#endif
+
 @interface LUT ()
 @end
 
@@ -710,21 +715,6 @@
     return copiedLUT;
 }
 
-- (CIFilter *)coreImageFilterWithCurrentColorSpace {
-    CIFilter *filter;
-    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-    #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
-    filter = [self coreImageFilterWithColorSpace:colorspace];
-    #elif TARGET_OS_MAC
-    //good for render, not good for viewing
-    filter = [self coreImageFilterWithColorSpace:colorspace];
-    //good for viewing, not good for render
-    //return [self coreImageFilterWithColorSpace:[[[NSScreen mainScreen] colorSpace] CGColorSpace]];
-    #endif
-    //CGColorSpaceRelease(colorspace);
-    return filter;
-}
-
 - (NSData *)lutDataRGBAf{
     @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
 }
@@ -733,8 +723,23 @@
     @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
 }
 
+- (CIFilter *)coreImageFilterWithCurrentColorSpace {
+    CIFilter *filter;
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+    filter = [self coreImageFilterWithColorSpace:colorspace];
+#elif TARGET_OS_MAC
+    //good for render, not good for viewing
+    filter = [self coreImageFilterWithColorSpace:colorspace];
+    //good for viewing, not good for render
+    //return [self coreImageFilterWithColorSpace:[[[NSScreen mainScreen] colorSpace] CGColorSpace]];
+#endif
+    //CGColorSpaceRelease(colorspace);
+    return filter;
+}
+
 - (CIImage *)processCIImage:(CIImage *)image {
-    CIFilter *filter = [self coreImageFilterWithCurrentColorSpace];
+    CIFilter *filter = [self coreImageFilterWithColorSpace:image.colorSpace];
     [filter setValue:image forKey:@"inputImage"];
     return [filter valueForKey:@"outputImage"];
 }
@@ -754,6 +759,7 @@
 #elif TARGET_OS_MAC
 
 - (NSImage *)processNSImage:(NSImage *)image
+ preserveEmbeddedColorSpace:(BOOL)preserveEmbeddedColorSpace
                  renderPath:(LUTImageRenderPath)renderPath {
 
     if (![image.representations.firstObject isKindOfClass:[NSBitmapImageRep class]]) {
@@ -763,24 +769,27 @@
     LUT *usedLUT;
 
     #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
-    if ([image isSceneLinear]) {
-        image = [[image imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
-        usedLUT = [self LUTByChangingInputLowerBound:[image minimumSceneValue] inputUpperBound:[image maximumSceneValue]];
-    }
-    else {
-        usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
-    }
+        if ([image isSceneLinear]) {
+            image = [[image imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
+            usedLUT = [self LUTByChangingInputLowerBound:[image minimumSceneValue] inputUpperBound:[image maximumSceneValue]];
+        }
+        else {
+            usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
+        }
     #else
-    usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
+        usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
     #endif
 
-    [((NSBitmapImageRep *)image.representations.firstObject) setColorSpaceName:NSDeviceRGBColorSpace]; //make sure to toss the embedded colorspace if it exists
+    if (!preserveEmbeddedColorSpace) {
+        image = [image cocoaLUT_imageWithDeviceRGBColorspace];
+    }
 
     if (renderPath == LUTImageRenderPathCoreImage || renderPath == LUTImageRenderPathCoreImageSoftware) {
 
         CIImage *inputCIImage = [[CIImage alloc] initWithBitmapImageRep:(NSBitmapImageRep *)image.representations.firstObject];
+
         CIImage *outputCIImage = [usedLUT processCIImage:inputCIImage];
-        return LUTNSImageFromCIImage(outputCIImage, renderPath == LUTImageRenderPathCoreImageSoftware);
+        return LUTNSImageFromCIImage(outputCIImage, renderPath == LUTImageRenderPathCoreImageSoftware, [(NSBitmapImageRep *)image.representations.firstObject colorSpaceName]);
     }
     else if (renderPath == LUTImageRenderPathDirect) {
         return [usedLUT processNSImageDirectly:image];

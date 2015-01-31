@@ -260,6 +260,7 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
  *  @return A `NSImage` with the receiver's color transformation applied.
  */
 - (NSImage *)processNSImage:(NSImage *)image
+ preserveEmbeddedColorSpace:(BOOL)preserveEmbeddedColorSpace
                  renderPath:(LUTImageRenderPath)renderPath;
 #endif
 

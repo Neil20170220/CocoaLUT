@@ -78,7 +78,7 @@ SystemColor* systemColorWithHexString(NSString* hexString);
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 #elif TARGET_OS_MAC
 void LUTNSImageLog(NSImage *image);
-NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer);
+NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer, NSString *colorSpaceName);
 #endif
 
 @interface LUTHelper : NSObject

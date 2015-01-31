@@ -43,4 +43,10 @@
  */
 @property (readonly) BOOL isVideo;
 
+
+/**
+ *  Set whether the images should reflect the embedded colorspace profile or not.
+ */
+@property (assign, nonatomic) BOOL useImageEmbeddedColorspace;
+
 @end
