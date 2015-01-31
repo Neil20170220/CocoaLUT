@@ -117,7 +117,23 @@
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSImage *usedNormalImage = self.useImageEmbeddedColorspace?self.previewImage:[self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
+
+        NSImage *usedNormalImage;
+        #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
+        if ([usedNormalImage isSceneLinear]) {
+            if (!self.useImageEmbeddedColorspace) {
+                usedNormalImage = [[self.previewImage imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
+            }
+            else{
+                usedNormalImage = [[self.previewImage imageInGenericHDRColorSpace] imageByDenormalizingSceneLinearData];
+            }
+        }
+        else{
+            usedNormalImage = self.useImageEmbeddedColorspace?self.previewImage:[self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
+        }
+        #else
+            usedNormalImage = self.useImageEmbeddedColorspace?self.previewImage:[self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
+        #endif
         NSImage *lutImage = self.previewImage;
         if (self.lut && lutImage) {
             lutImage = [self.lut processNSImage:self.previewImage
@@ -127,11 +143,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.normalImageLayer.contents = usedNormalImage;
             self.lutImageLayer.contents = lutImage;
-            #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
-            self.normalImageLayer.contents = [self.previewImage isSceneLinear]?[self.previewImage imageInDeviceRGBColorSpace]:self.previewImage;
-            #else
-            self.normalImageLayer.contents = self.previewImage;
-            #endif
         });
     });
 }
@@ -151,13 +162,6 @@
 
 - (void)setPreviewImage:(NSImage *)previewImage {
     _previewImage = previewImage;
-
-    #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
-    #elif TARGET_OS_MAC
-    if (!self.useImageEmbeddedColorspace) {
-        _previewImage = [self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
-    }
-    #endif
 
     if (_previewImage) {
         self.videoURL = nil;

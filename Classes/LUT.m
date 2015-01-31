@@ -770,8 +770,15 @@
 
     #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
         if ([image isSceneLinear]) {
-            image = [[image imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
-            usedLUT = [self LUTByChangingInputLowerBound:[image minimumSceneValue] inputUpperBound:[image maximumSceneValue]];
+            if (!preserveEmbeddedColorSpace) {
+                image = [[image imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
+                usedLUT = [self LUTByChangingInputLowerBound:[image minimumSceneValue] inputUpperBound:[image maximumSceneValue]];
+            }
+            else{
+                image = [[image imageInGenericHDRColorSpace] imageByDenormalizingSceneLinearData];
+                usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
+            }
+
         }
         else {
             usedLUT = [self LUTByChangingInputLowerBound:0 inputUpperBound:1];
