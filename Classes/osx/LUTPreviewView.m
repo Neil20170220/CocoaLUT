@@ -8,9 +8,6 @@
 
 #import "LUTPreviewView.h"
 #import <QuartzCore/QuartzCore.h>
-#if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
-#import <VVSceneLinearImageRep/NSImage+SceneLinear.h>
-#endif
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 #elif TARGET_OS_MAC
