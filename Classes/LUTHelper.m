@@ -388,7 +388,6 @@ NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer) {
     NSImage *nsImage = [[NSImage alloc] initWithCGImage:cgImage size:ciImage.extent.size];
     CGImageRelease(cgImage);
 	CGContextRelease(context);
-    CGColorSpaceRelease(colorSpace);
 
     [NSGraphicsContext restoreGraphicsState];
 
