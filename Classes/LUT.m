@@ -739,7 +739,11 @@
 }
 
 - (CIImage *)processCIImage:(CIImage *)image {
+    #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
+    CIFilter *filter = [self coreImageFilterWithCurrentColorSpace];
+    #elif TARGET_OS_MAC
     CIFilter *filter = [self coreImageFilterWithColorSpace:image.colorSpace];
+    #endif
     [filter setValue:image forKey:@"inputImage"];
     return [filter valueForKey:@"outputImage"];
 }
