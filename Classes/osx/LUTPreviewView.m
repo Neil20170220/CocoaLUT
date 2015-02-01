@@ -122,7 +122,7 @@
         #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
         if ([usedNormalImage isSceneLinear]) {
             if (!self.useImageEmbeddedColorspace) {
-                usedNormalImage = [[self.previewImage imageInDeviceRGBColorSpace] imageByNormalizingSceneLinearData];
+                usedNormalImage = [[self.previewImage imageInDeviceRGBColorSpace] imageByDenormalizingSceneLinearData];
             }
             else{
                 usedNormalImage = [[self.previewImage imageInGenericHDRColorSpace] imageByDenormalizingSceneLinearData];
