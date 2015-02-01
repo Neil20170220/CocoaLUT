@@ -12,7 +12,7 @@
 /**
  * The domain for a LUT error.
  */
-extern NSString * const LUTErrorDomain = @"co.videovillage.cocoalut.lut";
+NSString * const LUTErrorDomain = @"co.videovillage.cocoalut.lut";
 
 /**
  * Error codes for LUT errors
