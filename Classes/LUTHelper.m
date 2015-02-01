@@ -365,11 +365,9 @@ NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer) {
     int rows = [ciImage extent].size.height;
     int rowBytes = (width * 8);
 
-    uint16_t *bitmapData = malloc(2*4*width*rows);
-
     CGColorSpaceRef colorSpace = ciImage.colorSpace;
 
-    CGContextRef context = CGBitmapContextCreate(bitmapData,
+    CGContextRef context = CGBitmapContextCreate(NULL,
                                                  width,
                                                  rows,
                                                  16,
@@ -390,6 +388,7 @@ NSImage* LUTNSImageFromCIImage(CIImage *ciImage, BOOL useSoftwareRenderer) {
     NSImage *nsImage = [[NSImage alloc] initWithCGImage:cgImage size:ciImage.extent.size];
     CGImageRelease(cgImage);
 	CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
 
     [NSGraphicsContext restoreGraphicsState];
 
