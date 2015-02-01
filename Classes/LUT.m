@@ -796,7 +796,7 @@
         CIImage *inputCIImage = [[CIImage alloc] initWithBitmapImageRep:(NSBitmapImageRep *)image.representations.firstObject];
 
         CIImage *outputCIImage = [usedLUT processCIImage:inputCIImage];
-        return LUTNSImageFromCIImage(outputCIImage, renderPath == LUTImageRenderPathCoreImageSoftware, [(NSBitmapImageRep *)image.representations.firstObject colorSpaceName]);
+        return LUTNSImageFromCIImage(outputCIImage, renderPath == LUTImageRenderPathCoreImageSoftware);
     }
     else if (renderPath == LUTImageRenderPathDirect) {
         return [usedLUT processNSImageDirectly:image];
