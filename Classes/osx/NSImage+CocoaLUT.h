@@ -14,4 +14,6 @@
 
 -(CGColorSpaceRef)cocoaLUT_cgColorSpaceRef;
 
+- (NSImage *)cocoalut_imageByPreservingEmbeddedColorSpace:(BOOL)preserveEmbeddedColorSpace;
+
 @end

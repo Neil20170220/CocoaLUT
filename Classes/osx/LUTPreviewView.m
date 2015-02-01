@@ -112,28 +112,16 @@
     }
 }
 
+
+
 - (void)updateImageViews {
     if (!self.previewImage) {
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-        NSImage *usedNormalImage;
-        #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
-        if ([usedNormalImage isSceneLinear]) {
-            if (!self.useImageEmbeddedColorspace) {
-                usedNormalImage = [[self.previewImage imageInDeviceRGBColorSpace] imageByDenormalizingSceneLinearData];
-            }
-            else{
-                usedNormalImage = [[self.previewImage imageInGenericHDRColorSpace] imageByDenormalizingSceneLinearData];
-            }
-        }
-        else{
-            usedNormalImage = self.useImageEmbeddedColorspace?self.previewImage:[self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
-        }
-        #else
-            usedNormalImage = self.useImageEmbeddedColorspace?self.previewImage:[self.previewImage cocoaLUT_imageWithDeviceRGBColorspace];
-        #endif
+        NSImage *usedNormalImage = [self.previewImage cocoalut_imageByPreservingEmbeddedColorSpace:self.useImageEmbeddedColorspace];
+
         NSImage *lutImage = self.previewImage;
         if (self.lut && lutImage) {
             lutImage = [self.lut processNSImage:self.previewImage
