@@ -197,6 +197,7 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 
 - (LUTColor *)colorAtInterpolatedR:(double)redPoint g:(double)greenPoint b:(double)bluePoint;
 
+- (LUTColor *)indexForColor:(LUTColor *)color;
 
 - (LUTColor *)maximumOutputColor;
 - (LUTColor *)minimumOutputColor;

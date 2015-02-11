@@ -411,6 +411,14 @@
     return [LUTColor colorWithRed:red green:green blue:blue];
 }
 
+- (LUTColor *)indexForColor:(LUTColor *)color{
+    double redRemappedInterpolatedIndex = remapNoError(color.red, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+    double greenRemappedInterpolatedIndex = remapNoError(color.green, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+    double blueRemappedInterpolatedIndex = remapNoError(color.blue, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+
+    return [LUTColor colorWithRed:redRemappedInterpolatedIndex green:greenRemappedInterpolatedIndex blue:blueRemappedInterpolatedIndex];
+}
+
 - (LUTColor *)colorAtColor:(LUTColor *)color{
     color = [color clampedWithLowerBound:[self inputLowerBound] upperBound:[self inputUpperBound]];
     double redRemappedInterpolatedIndex = remap(color.red, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
