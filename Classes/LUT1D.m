@@ -173,6 +173,17 @@
     return [self.blueCurve[b] doubleValue];
 }
 
+- (LUTColor *)colorAtColor:(LUTColor *)color{
+    //no fear of extrapolating
+    double redRemappedInterpolatedIndex = remapNoError(color.red, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+    double greenRemappedInterpolatedIndex = remapNoError(color.green, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+    double blueRemappedInterpolatedIndex = remapNoError(color.blue, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+
+    return [self colorAtInterpolatedR:redRemappedInterpolatedIndex
+                                    g:greenRemappedInterpolatedIndex
+                                    b:blueRemappedInterpolatedIndex];
+}
+
 - (LUTColor *)colorAtInterpolatedR:(double)redPoint
                                  g:(double)greenPoint
                                  b:(double)bluePoint{
@@ -180,9 +191,7 @@
     if ((redPoint < 0   || redPoint     > self.size - 1) ||
         (greenPoint < 0 || greenPoint   > self.size - 1) ||
         (bluePoint < 0  || bluePoint    > self.size - 1)) {
-        @throw [NSException exceptionWithName:@"InvalidInputs"
-                                       reason:[NSString stringWithFormat:@"Tried to access out-of-bounds point r:%f g:%f b:%f", redPoint, greenPoint, bluePoint]
-                                     userInfo:nil];
+        return [self colorAtExtrapolatedR:redPoint g:greenPoint b:bluePoint];
     }
 
     //red
@@ -201,6 +210,57 @@
 
     return [LUTColor colorWithRed:interpolatedRedValue green:interpolatedGreenValue blue:interpolatedBlueValue];
 
+}
+
+- (LUTColor *)colorAtExtrapolatedR:(double)redPoint g:(double)greenPoint b:(double)bluePoint{
+    LUTColor *increasingSlope = [[self colorAtR:self.size-1 g:self.size-1 b:self.size-1] colorBySubtractingColor:[self colorAtR:self.size-2 g:self.size-2 b:self.size-2]];
+    double selfMaxIndex = self.size-1.0;
+    LUTColor *selfColorAtMaxIndex = [self colorAtR:selfMaxIndex g:selfMaxIndex b:selfMaxIndex];
+
+    LUTColor *decreasingSlope = [[self colorAtR:1 g:1 b:1] colorBySubtractingColor:[self colorAtR:0 g:0 b:0]];
+    LUTColor *selfColorAtMinIndex = [self colorAtR:0 g:0 b:0];
+
+    LUTColor *newColor = [LUTColor colorWithZeroes];
+
+    if (redPoint > selfMaxIndex) {
+        newColor.red = selfColorAtMaxIndex.red + (redPoint - selfMaxIndex)*increasingSlope.red;
+    }
+    else if (redPoint < 0){
+        newColor.red = selfColorAtMinIndex.red + (redPoint)*decreasingSlope.red;
+    }
+    else{
+        //interpolate instead
+        int redBottomIndex = floor(redPoint);
+        int redTopIndex = ceil(redPoint);
+        newColor.red = lerp1d([self.redCurve[redBottomIndex] doubleValue], [self.redCurve[redTopIndex] doubleValue], redPoint - (double)redBottomIndex);
+    }
+
+    if (greenPoint > selfMaxIndex) {
+        newColor.green = selfColorAtMaxIndex.green + (greenPoint - selfMaxIndex)*increasingSlope.green;
+    }
+    else if (greenPoint < 0){
+        newColor.green = selfColorAtMinIndex.green + (greenPoint)*decreasingSlope.green;
+    }
+    else{
+        int greenBottomIndex = floor(greenPoint);
+        int greenTopIndex = ceil(greenPoint);
+        newColor.green = lerp1d([self.greenCurve[greenBottomIndex] doubleValue], [self.greenCurve[greenTopIndex] doubleValue], greenPoint - (double)greenBottomIndex);
+    }
+
+    if (bluePoint > selfMaxIndex) {
+        newColor.blue = selfColorAtMaxIndex.blue + (bluePoint - selfMaxIndex)*increasingSlope.blue;
+    }
+    else if (bluePoint < 0){
+        newColor.blue = selfColorAtMinIndex.blue + (bluePoint)*decreasingSlope.blue;
+    }
+    else{
+        int blueBottomIndex = floor(bluePoint);
+        int blueTopIndex = ceil(bluePoint);
+        newColor.blue = lerp1d([self.blueCurve[blueBottomIndex] doubleValue], [self.blueCurve[blueTopIndex] doubleValue], bluePoint - (double)blueBottomIndex);
+    }
+
+    return newColor;
+    
 }
 
 + (M13OrderedDictionary *)LUT1DSwizzleChannelsMethods{

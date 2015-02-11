@@ -45,6 +45,8 @@
                       lowerBound:(double)lowerBound
                       upperBound:(double)upperBound;
 
+- (LUTColor *)colorAtExtrapolatedR:(double)redPoint g:(double)greenPoint b:(double)bluePoint;
+
 
 - (BOOL)isReversibleWithStrictness:(BOOL)strict;
 - (instancetype)LUT1DByReversingWithStrictness:(BOOL)strictness
