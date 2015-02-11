@@ -98,7 +98,12 @@
 - (void)updateFilters {
     if (self.lut) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            CIFilter *filter = [self.lut coreImageFilterWithCurrentColorSpace];
+            LUT *usedLUT = self.lut;
+            if (self.lut.inputLowerBound != 0 || self.lut.inputUpperBound != 1) {
+                //video will always be display-referred 0-1 (until it isn't)
+                usedLUT = [self.lut LUTByChangingInputLowerBound:0 inputUpperBound:1];
+            }
+            CIFilter *filter = [usedLUT coreImageFilterWithCurrentColorSpace];
             //video layer filter always uses display's colorspace
             if (filter) {
                 dispatch_async(dispatch_get_main_queue(), ^{
