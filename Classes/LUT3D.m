@@ -537,6 +537,10 @@
     NSUInteger sizeOfColorCubeFilter = clamp(self.size, 0, COCOALUT_MAX_CICOLORCUBE_SIZE);
     LUT3D *usedLUT = self.size==sizeOfColorCubeFilter?self:[self LUTByResizingToSize:sizeOfColorCubeFilter];
 
+    if (self.inputLowerBound != 0 || self.inputUpperBound != 1) {
+        NSLog(@"CocoaLUT: You should only be seeing this message if you are applying a CI LUT filter to a normalized scene-linear image - make sure to change the input bounds to 0-1 if you aren't using normalized scene-linear data.");
+    }
+
     NSData *cubeData = [usedLUT lutDataRGBAf];
 
     CIFilter *colorCube;

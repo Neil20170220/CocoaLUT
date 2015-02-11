@@ -459,8 +459,12 @@
     #if defined(COCOAPODS_POD_AVAILABLE_VVLUT1DFilter)
     LUT1D *usedLUT = self.size>COCOALUT_MAX_VVLUT1DFILTER_SIZE?[self LUTByResizingToSize:COCOALUT_MAX_VVLUT1DFILTER_SIZE]:self;
 
-    if (usedLUT.inputUpperBound - usedLUT.inputLowerBound != 1.0 && usedLUT.inputUpperBound - usedLUT.inputLowerBound < 2.0) {
-        usedLUT = [usedLUT LUTByChangingInputLowerBound:0 inputUpperBound:1];
+//    if (usedLUT.inputUpperBound - usedLUT.inputLowerBound != 1.0 && usedLUT.inputUpperBound - usedLUT.inputLowerBound < 2.0) {
+//        usedLUT = [usedLUT LUTByChangingInputLowerBound:0 inputUpperBound:1];
+//    }
+
+    if (self.inputLowerBound != 0 || self.inputUpperBound != 1) {
+        NSLog(@"CocoaLUT: You should only be seeing this message if you are applying a CI LUT filter to a normalized scene-linear image - make sure to change the input bounds to 0-1 if you aren't using normalized scene-linear data.");
     }
 
     NSData *inputData = [usedLUT lutDataRGBAf];
