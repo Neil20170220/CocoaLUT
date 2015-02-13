@@ -103,6 +103,13 @@
     
 }
 
++ (instancetype)LUTFromBitmapData:(NSData *)data
+                      LUTDataType:(LUTDataType)lutDataType
+                  inputLowerBound:(double)inputLowerBound
+                  inputUpperBound:(double)inputUpperBound{
+    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+}
+
 + (instancetype)LUTFromData:(NSData *)data formatterID:(NSString *)formatterID error:(NSError * __autoreleasing *)error
 {
     LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:formatterID];
@@ -723,7 +730,7 @@
     return copiedLUT;
 }
 
-- (NSData *)lutDataRGBAf{
+- (NSData *)bitmapDataWithType:(LUTDataType)lutDataType{
     @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
 }
 

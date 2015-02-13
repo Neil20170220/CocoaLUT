@@ -84,6 +84,35 @@
                                        upperBound:upperBound];
 }
 
++ (instancetype)LUTFromBitmapData:(NSData *)data
+                      LUTDataType:(LUTDataType)lutDataType
+                inputLowerBound:(double)inputLowerBound
+                  inputUpperBound:(double)inputUpperBound{
+    if (lutDataType == LUTDataTypeRGBAf) {
+        LUT1D *lut1D = [LUT1D LUTOfSize:(data.length/sizeof(float))/4 inputLowerBound:inputLowerBound inputUpperBound:inputUpperBound];
+        
+        float *bitmap = (float *)data.bytes;
+        for (int i = 0; i < lut1D.size*4; i+=4) {
+            NSInteger currentIndex = i/4;
+            [lut1D setColor:[LUTColor colorWithRed:bitmap[i] green:bitmap[i+1] blue:bitmap[i+2]] r:currentIndex g:currentIndex b:currentIndex];
+        }
+        return lut1D;
+    }
+    else if (lutDataType == LUTDataTypeRGBd){
+        LUT1D *lut1D = [LUT1D LUTOfSize:(data.length/sizeof(double))/3 inputLowerBound:inputLowerBound inputUpperBound:inputUpperBound];
+
+        double *bitmap = (double *)data.bytes;
+        for (int i = 0; i < lut1D.size*3; i+=3) {
+            NSInteger currentIndex = i/3;
+            [lut1D setColor:[LUTColor colorWithRed:bitmap[i] green:bitmap[i+1] blue:bitmap[i+2]] r:currentIndex g:currentIndex b:currentIndex];
+        }
+        return lut1D;
+    }
+    else{
+        return nil;
+    }
+}
+
 - (instancetype)initWithRedCurve:(NSMutableArray *)redCurve
                       greenCurve:(NSMutableArray *)greenCurve
                        blueCurve:(NSMutableArray *)blueCurve
@@ -441,18 +470,35 @@
     return newLUT;
 }
 
-- (NSData *)lutDataRGBAf{
-    size_t dataSize = sizeof(float)*4*self.size;
-    float* lutArray = (float *)malloc(dataSize);
-    for (int i = 0; i < self.size; i++) {
-        LUTColor *color = [self colorAtR:i g:i b:i];
-        lutArray[i*4] = clamp(color.red, 0, 1);
-        lutArray[i*4+1] = clamp(color.green, 0, 1);
-        lutArray[i*4+2] = clamp(color.blue, 0, 1);
-        lutArray[i*4+3] = 1.0;
-    }
+- (NSData *)bitmapDataWithType:(LUTDataType)lutDataType{
+    if (lutDataType == LUTDataTypeRGBAf) {
+        size_t dataSize = sizeof(float)*4*self.size;
+        float* lutArray = (float *)malloc(dataSize);
+        for (int i = 0; i < self.size; i++) {
+            LUTColor *color = [self colorAtR:i g:i b:i];
+            lutArray[i*4] = color.red;
+            lutArray[i*4+1] = color.green;
+            lutArray[i*4+2] = color.blue;
+            lutArray[i*4+3] = 1.0;
+        }
 
-    return [NSData dataWithBytesNoCopy:lutArray length:dataSize];
+        return [NSData dataWithBytesNoCopy:lutArray length:dataSize];
+    }
+    else if (lutDataType == LUTDataTypeRGBd){
+        size_t dataSize = sizeof(double)*3*self.size;
+        double* lutArray = (double *)malloc(dataSize);
+        for (int i = 0; i < self.size; i++) {
+            LUTColor *color = [self colorAtR:i g:i b:i];
+            lutArray[i*3] = color.red;
+            lutArray[i*3+1] = color.green;
+            lutArray[i*3+2] = color.blue;
+        }
+
+        return [NSData dataWithBytesNoCopy:lutArray length:dataSize];
+    }
+    else{
+        return nil;
+    }
 }
 
 - (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace{
@@ -467,7 +513,7 @@
         NSLog(@"CocoaLUT: You should only be seeing this message if you are applying a CI LUT filter to a normalized scene-linear image - make sure to change the input bounds to 0-1 if you aren't using normalized scene-linear data.");
     }
 
-    NSData *inputData = [usedLUT lutDataRGBAf];
+    NSData *inputData = [usedLUT bitmapDataWithType:LUTDataTypeRGBAf];
 
     CIFilter *lutFilter;
 

@@ -77,6 +77,49 @@
                                  latticeArray:[LUT3D blankLatticeArrayOfSize:size]];
 }
 
++ (instancetype)LUTFromBitmapData:(NSData *)data
+                      LUTDataType:(LUTDataType)lutDataType
+                  inputLowerBound:(double)inputLowerBound
+                  inputUpperBound:(double)inputUpperBound{
+    if (lutDataType == LUTDataTypeRGBAf) {
+        LUT3D *lut3D = [LUT3D LUTOfSize:cbrt((data.length/sizeof(float))/4) inputLowerBound:inputLowerBound inputUpperBound:inputUpperBound];
+
+        float *bitmap = (float *)data.bytes;
+
+        for (int i = 0; i < 4*lut3D.size*lut3D.size*lut3D.size; i+=4) {
+            int currentCubeIndex = i/4;
+            int redIndex = currentCubeIndex % lut3D.size;
+            int greenIndex = ((currentCubeIndex % (lut3D.size * lut3D.size)) / (lut3D.size) );
+            int blueIndex = currentCubeIndex / (lut3D.size * lut3D.size);
+
+            [lut3D setColor:[LUTColor colorWithRed:bitmap[i] green:bitmap[i+1] blue:bitmap[i+2]] r:redIndex g:greenIndex b:blueIndex];
+        }
+
+
+        return lut3D;
+
+    }
+    else if (lutDataType == LUTDataTypeRGBd){
+        LUT3D *lut3D = [LUT3D LUTOfSize:cbrt((data.length/sizeof(double))/3) inputLowerBound:inputLowerBound inputUpperBound:inputUpperBound];
+
+        double *bitmap = (double *)data.bytes;
+
+        for (int i = 0; i < 3*lut3D.size*lut3D.size*lut3D.size; i+=3) {
+            int currentCubeIndex = i/3;
+            int redIndex = currentCubeIndex % lut3D.size;
+            int greenIndex = ((currentCubeIndex % (lut3D.size * lut3D.size)) / (lut3D.size) );
+            int blueIndex = currentCubeIndex / (lut3D.size * lut3D.size);
+
+            [lut3D setColor:[LUTColor colorWithRed:bitmap[i] green:bitmap[i+1] blue:bitmap[i+2]] r:redIndex g:greenIndex b:blueIndex];
+        }
+
+        return lut3D;
+    }
+    else{
+        return nil;
+    }
+}
+
 + (instancetype)LUT3DFromFalseColorWithSize:(NSUInteger)size{
     LUT3D *falseColorLUT = [LUT3D LUTOfSize:size inputLowerBound:0 inputUpperBound:1];
     
@@ -514,23 +557,45 @@
     return tetraFinal;
 }
 
-- (NSData *)lutDataRGBAf {
-    size_t size = self.size;
-    size_t cubeDataSize = size * size * size * sizeof (float) * 4;
-    float *cubeData = (float *) malloc (cubeDataSize);
+- (NSData *)bitmapDataWithType:(LUTDataType)lutDataType{
+    if (lutDataType == LUTDataTypeRGBAf) {
+        size_t size = self.size;
+        size_t cubeDataSize = size * size * size * sizeof (float) * 4;
+        float *cubeData = (float *) malloc (cubeDataSize);
 
-    [self LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
-        LUTColor *transformedColor = [self colorAtR:r g:g b:b];
+        [self LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+            LUTColor *transformedColor = [self colorAtR:r g:g b:b];
 
-        size_t offset = 4*(b*size*size + g*size + r);
+            size_t offset = 4*(b*size*size + g*size + r);
 
-        cubeData[offset]   = (float)transformedColor.red;
-        cubeData[offset+1] = (float)transformedColor.green;
-        cubeData[offset+2] = (float)transformedColor.blue;
-        cubeData[offset+3] = 1.0f;
-    }];
+            cubeData[offset]   = (float)transformedColor.red;
+            cubeData[offset+1] = (float)transformedColor.green;
+            cubeData[offset+2] = (float)transformedColor.blue;
+            cubeData[offset+3] = 1.0f;
+        }];
 
-    return [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
+        return [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
+    }
+    else if(lutDataType == LUTDataTypeRGBd){
+        size_t size = self.size;
+        size_t cubeDataSize = size * size * size * sizeof (double) * 3;
+        double *cubeData = (double *) malloc (cubeDataSize);
+
+        [self LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+            LUTColor *transformedColor = [self colorAtR:r g:g b:b];
+
+            size_t offset = 3*(b*size*size + g*size + r);
+
+            cubeData[offset]   = (double)transformedColor.red;
+            cubeData[offset+1] = (double)transformedColor.green;
+            cubeData[offset+2] = (double)transformedColor.blue;
+        }];
+
+        return [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
+    }
+    else{
+        return nil;
+    }
 }
 
 - (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace {
@@ -541,7 +606,7 @@
         NSLog(@"CocoaLUT: You should only be seeing this message if you are applying a CI LUT filter to a normalized scene-linear image - make sure to change the input bounds to 0-1 if you aren't using normalized scene-linear data.");
     }
 
-    NSData *cubeData = [usedLUT lutDataRGBAf];
+    NSData *cubeData = [usedLUT bitmapDataWithType:LUTDataTypeRGBAf];
 
     CIFilter *colorCube;
     if (colorSpace) {

@@ -36,6 +36,34 @@
 
 }
 
+- (void)testReadWrite1DBitmapDataRGBAf{
+    LUT1D *identityLUT1D = [LUT1D LUTIdentityOfSize:2048 inputLowerBound:0 inputUpperBound:1];
+
+    LUT1D *read1D = [LUT1D LUTFromBitmapData:[identityLUT1D bitmapDataWithType:LUTDataTypeRGBAf] LUTDataType:LUTDataTypeRGBAf inputLowerBound:0 inputUpperBound:1];
+
+    XCTAssert([identityLUT1D equalsLUT:read1D]);
+
+    LUT3D *identityLUT3D = [LUT3D LUTIdentityOfSize:33 inputLowerBound:0 inputUpperBound:1];
+
+    LUT3D *read3D = [LUT3D LUTFromBitmapData:[identityLUT3D bitmapDataWithType:LUTDataTypeRGBAf] LUTDataType:LUTDataTypeRGBAf inputLowerBound:0 inputUpperBound:1];
+
+    XCTAssert([identityLUT3D equalsLUT:read3D]);
+}
+
+- (void)testReadWrite1DBitmapDataRGBd{
+    LUT1D *identityLUT1D = [LUT1D LUTIdentityOfSize:2048 inputLowerBound:0 inputUpperBound:1];
+
+    LUT1D *read1D = [LUT1D LUTFromBitmapData:[identityLUT1D bitmapDataWithType:LUTDataTypeRGBd] LUTDataType:LUTDataTypeRGBd inputLowerBound:0 inputUpperBound:1];
+
+    XCTAssert([identityLUT1D equalsLUT:read1D]);
+
+    LUT3D *identityLUT3D = [LUT3D LUTIdentityOfSize:33 inputLowerBound:0 inputUpperBound:1];
+
+    LUT3D *read3D = [LUT3D LUTFromBitmapData:[identityLUT3D bitmapDataWithType:LUTDataTypeRGBd] LUTDataType:LUTDataTypeRGBd inputLowerBound:0 inputUpperBound:1];
+
+    XCTAssert([identityLUT3D equalsLUT:read3D]);
+}
+
 - (void)testReadWriteSerializedDataRepresentation{
     LUT1D *identityLUT1D = [LUT1D LUTIdentityOfSize:2048 inputLowerBound:0 inputUpperBound:1];
     

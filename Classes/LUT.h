@@ -25,6 +25,11 @@ typedef NS_ENUM(NSInteger, LUT1DSwizzleChannelsMethod) {
     LUT1DSwizzleChannelsMethodBlueCopiedToRGB
 };
 
+typedef NS_ENUM(NSInteger, LUTDataType) {
+    LUTDataTypeRGBAf,
+    LUTDataTypeRGBd
+};
+
 typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
     LUTImageRenderPathCoreImage,
     LUTImageRenderPathCoreImageSoftware,
@@ -88,6 +93,11 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 + (instancetype)LUTFromData:(NSData *)data
                 formatterID:(NSString *)formatterID
                       error:(NSError * __autoreleasing *)error;
+
++ (instancetype)LUTFromBitmapData:(NSData *)data
+                      LUTDataType:(LUTDataType)lutDataType
+                  inputLowerBound:(double)inputLowerBound
+                  inputUpperBound:(double)inputUpperBound;
 
 + (instancetype)LUTFromDataRepresentation:(NSData *)data;
 
@@ -226,11 +236,12 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 - (CIFilter *)coreImageFilterWithCurrentColorSpace;
 
 /**
- *	Essentially returns a RGBAf bitmap image of the LUT.
+ *	Essentially returns a bitmap image of the LUT with the specified LUTDataType.
  *
- *	@return A NSData object with RGBAf data of the LUT (red major if 3D)
+ *	@return A NSData object with bitmap data of the LUT (red major if 3D)
  **/
-- (NSData *)lutDataRGBAf;
+- (NSData *)bitmapDataWithType:(LUTDataType)lutDataType;
+
 
 /**
  *  Returns a `CIImage` with the receiver's color transformation applied.
