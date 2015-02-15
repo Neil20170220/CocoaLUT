@@ -36,7 +36,7 @@
 
 }
 
-- (void)testReadWrite1DBitmapDataRGBAf{
+- (void)testReadWriteBitmapDataRGBAf{
     LUT1D *identityLUT1D = [LUT1D LUTIdentityOfSize:2048 inputLowerBound:0 inputUpperBound:1];
 
     LUT1D *read1D = [LUT1D LUTFromBitmapData:[identityLUT1D bitmapDataWithType:LUTDataTypeRGBAf] LUTDataType:LUTDataTypeRGBAf inputLowerBound:0 inputUpperBound:1];
@@ -50,7 +50,7 @@
     XCTAssert([identityLUT3D equalsLUT:read3D]);
 }
 
-- (void)testReadWrite1DBitmapDataRGBd{
+- (void)testReadWriteBitmapDataRGBd{
     LUT1D *identityLUT1D = [LUT1D LUTIdentityOfSize:2048 inputLowerBound:0 inputUpperBound:1];
 
     LUT1D *read1D = [LUT1D LUTFromBitmapData:[identityLUT1D bitmapDataWithType:LUTDataTypeRGBd] LUTDataType:LUTDataTypeRGBd inputLowerBound:0 inputUpperBound:1];
