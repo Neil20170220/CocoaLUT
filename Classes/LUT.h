@@ -25,6 +25,12 @@ typedef NS_ENUM(NSInteger, LUT1DSwizzleChannelsMethod) {
     LUT1DSwizzleChannelsMethodBlueCopiedToRGB
 };
 
+typedef NS_ENUM(NSInteger, LUT1DReverseStrictnessType) {
+    LUT1DReverseStrictnessTypeStrict,
+    LUT1DReverseStrictnessTypeAllowFlatSections,
+    LUT1DReverseStrictnessTypeAllowChangeInDirection
+};
+
 typedef NS_ENUM(NSInteger, LUTDataType) {
     LUTDataTypeRGBAf,
     LUTDataTypeRGBd

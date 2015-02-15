@@ -16,6 +16,8 @@
 
 
 
+
+
 /**
  *  A one-dimensional color lookup table that is represented by three channel curves.
  */
@@ -48,9 +50,9 @@
 - (LUTColor *)colorAtExtrapolatedR:(double)redPoint g:(double)greenPoint b:(double)bluePoint;
 
 
-- (BOOL)isReversibleWithStrictness:(BOOL)strict;
-- (instancetype)LUT1DByReversingWithStrictness:(BOOL)strictness
-                         autoAdjustInputBounds:(BOOL)autoAdjustInputBounds;
+- (BOOL)isReversibleWithStrictnessType:(LUT1DReverseStrictnessType)strictness;
+- (instancetype)LUT1DByReversingWithStrictnessType:(LUT1DReverseStrictnessType)strictnessType
+                             autoAdjustInputBounds:(BOOL)autoAdjustInputBounds;
 
 - (instancetype)LUT1DBySwizzling1DChannelsWithMethod:(LUT1DSwizzleChannelsMethod)method;
 

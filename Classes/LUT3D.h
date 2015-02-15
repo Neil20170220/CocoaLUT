@@ -14,6 +14,7 @@
 @class LUTColor;
 @class LUT1D;
 
+
 typedef NS_ENUM(NSInteger, LUTMonoConversionMethod) {
     LUTMonoConversionMethodAverageRGB,
     LUTMonoConversionMethodRec709WeightedRGB,
@@ -28,12 +29,12 @@ typedef NS_ENUM(NSInteger, LUTMonoConversionMethod) {
 @interface LUT3D : LUT
 
 - (instancetype)LUT3DByApplyingFalseColor;
-- (instancetype)LUT3DByExtractingColorShiftWithReverseStrictness:(BOOL)strictness;
-- (instancetype)LUT3DByExtractingColorShiftContrastReferredWithReverseStrictness:(BOOL)strictness;
+- (instancetype)LUT3DByExtractingColorShiftWithReverseStrictnessType:(LUT1DReverseStrictnessType)strictnessType;
+- (instancetype)LUT3DByExtractingColorShiftContrastReferredWithReverseStrictnessType:(LUT1DReverseStrictnessType)strictnessType;
 - (instancetype)LUT3DByExtractingContrastOnly;
 - (instancetype)LUT3DByConvertingToMonoWithConversionMethod:(LUTMonoConversionMethod)conversionMethod;
 - (instancetype)LUT3DBySwizzling1DChannelsWithMethod:(LUT1DSwizzleChannelsMethod)method
-                                          strictness:(BOOL)strictness;
+                                      strictnessType:(LUT1DReverseStrictnessType)strictnessType;
 
 - (instancetype)LUT3DByApplyingColorMatrixColumnMajorM00:(double)m00
                                                      m01:(double)m01

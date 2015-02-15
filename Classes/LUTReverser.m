@@ -30,7 +30,7 @@
     }
 
     if(isLUT1D(self.lut)){
-        LUT1D *reversedLUT1D = [(LUT1D *)self.lut LUT1DByReversingWithStrictness:NO autoAdjustInputBounds:YES];
+        LUT1D *reversedLUT1D = [(LUT1D *)self.lut LUT1DByReversingWithStrictnessType:LUT1DReverseStrictnessTypeAllowFlatSections autoAdjustInputBounds:YES];
         if(reversedLUT1D != nil){
             [self completedWithLUT:reversedLUT1D];
         }

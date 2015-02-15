@@ -333,9 +333,9 @@
     return swizzledLUT;
 }
 
-- (instancetype)LUT1DByReversingWithStrictness:(BOOL)strictness
-                         autoAdjustInputBounds:(BOOL)autoAdjustInputBounds{
-    if(![self isReversibleWithStrictness:strictness]){
+- (instancetype)LUT1DByReversingWithStrictnessType:(LUT1DReverseStrictnessType)strictnessType
+                             autoAdjustInputBounds:(BOOL)autoAdjustInputBounds{
+    if(![self isReversibleWithStrictnessType:strictnessType]){
         return nil;
     }
 
@@ -414,7 +414,7 @@
     return newLUT;
 }
 
-- (BOOL)isReversibleWithStrictness:(BOOL)strict{
+- (BOOL)isReversibleWithStrictnessType:(LUT1DReverseStrictnessType)strictnessType{
     BOOL isIncreasing = YES;
     BOOL isDecreasing = YES;
 
@@ -425,12 +425,12 @@
         for(int i = 1; i < [curve count]; i++){
             double currentValue = [curve[i] doubleValue];
             if(currentValue <= lastValue){//make <= to be very strict
-                if(strict || currentValue != lastValue){
+                if(strictnessType == LUT1DReverseStrictnessTypeStrict || currentValue != lastValue){
                     isIncreasing = NO;
                 }
             }
             if(currentValue >= lastValue){//make <= to be very strict
-                if(strict || currentValue != lastValue){
+                if(strictnessType == LUT1DReverseStrictnessTypeStrict || currentValue != lastValue){
                     isDecreasing = NO;
                 }
             }

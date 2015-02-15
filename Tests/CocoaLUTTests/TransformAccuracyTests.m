@@ -62,7 +62,7 @@
 - (void)testReverse1DIdentity{
     LUT1D *identity = [LUT1D LUTIdentityOfSize:1024 inputLowerBound:0 inputUpperBound:1];
 
-    XCTAssert([[identity LUT1DByReversingWithStrictness:YES autoAdjustInputBounds:NO] equalsLUT:identity], @"LUT1D identity reversed isn't equal to the identity.");
+    XCTAssert([[identity LUT1DByReversingWithStrictnessType:LUT1DReverseStrictnessTypeStrict autoAdjustInputBounds:NO] equalsLUT:identity], @"LUT1D identity reversed isn't equal to the identity.");
     ;
 
 }
@@ -73,9 +73,9 @@
                           fromColorTransferFunction:[LUTColorTransferFunction linearTransferFunction]
                             toColorTransferFunction:[LUTColorTransferFunction gammaTransferFunctionWithGamma:2.6]];
 
-    XCTAssert([[[linearToGamma26 LUT1DByReversingWithStrictness:YES autoAdjustInputBounds:NO] LUT1DByReversingWithStrictness:YES autoAdjustInputBounds:NO] equalsLUT:linearToGamma26], @"LUT1D twice reversed isn't equal to itself.");
+    XCTAssert([[[linearToGamma26 LUT1DByReversingWithStrictnessType:LUT1DReverseStrictnessTypeStrict autoAdjustInputBounds:NO] LUT1DByReversingWithStrictnessType:LUT1DReverseStrictnessTypeStrict autoAdjustInputBounds:NO] equalsLUT:linearToGamma26], @"LUT1D twice reversed isn't equal to itself.");
 
-    XCTAssert([[linearToGamma26 LUTByCombiningWithLUT:[linearToGamma26 LUT1DByReversingWithStrictness:YES autoAdjustInputBounds:NO]] equalsIdentityLUT], @"LUT1D + LUT1D Reverse isn't equal to identity.");
+    XCTAssert([[linearToGamma26 LUTByCombiningWithLUT:[linearToGamma26 LUT1DByReversingWithStrictnessType:LUT1DReverseStrictnessTypeStrict autoAdjustInputBounds:NO]] equalsIdentityLUT], @"LUT1D + LUT1D Reverse isn't equal to identity.");
 }
 
 @end

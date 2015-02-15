@@ -104,7 +104,7 @@
             return [(LUT1D *)lut LUT1DBySwizzling1DChannelsWithMethod:method];
         }
         else{
-            return [(LUT3D *)lut LUT3DBySwizzling1DChannelsWithMethod:method strictness:NO];
+            return [(LUT3D *)lut LUT3DBySwizzling1DChannelsWithMethod:method strictnessType:LUT1DReverseStrictnessTypeAllowFlatSections];
 
         }
     }
