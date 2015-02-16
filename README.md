@@ -52,6 +52,11 @@ it simply add the following line to your Podfile:
 
     pod 'CocoaLUT'
 
+To gain full functionality you should also probably add [VVLUT1DFilter](https://github.com/videovillage/VVLUT1DFilter), a Core Image filter optimized for 1D LUTs, and [VVSceneLinearImageRep](https://github.com/videovillage/VVSceneLinearImageRep), a subclass of NSBitmapImageRep that specifically handles EXR data.
+
+    pod 'VVLUT1DFilter'
+    pod 'VVSceneLinearImageRep'
+
 ## Related
 
 This project uses [LUTSpec](http://github.com/wilg/LUTSpec) for UTI standardization.
