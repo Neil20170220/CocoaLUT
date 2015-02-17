@@ -31,8 +31,7 @@
     NSMutableArray *trimmedLines = [NSMutableArray array];
     int integerMaxOutput = -1;
     int lutSize = -1;
-
-    NSUInteger lutLinesStartIndex = findFirstLUTLineInLines(lines, @"", 1, 0);
+    NSUInteger lutLinesStartIndex = findFirstLUTLineInLinesWithWhitespaceSeparators(lines, 1, 0);
 
     if(lutLinesStartIndex == -1){
         @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:@"Couldn't find start of LUT data lines." userInfo:nil];
