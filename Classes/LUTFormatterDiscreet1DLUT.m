@@ -51,11 +51,17 @@
             passthroughFileOptions[@"fileTypeVariant"] = @"Nuke";
         }
         if([trimmedLine rangeOfString:@"LUT"].location != NSNotFound){
-            lutSize = [[trimmedLine componentsSeparatedByString:@" "][2] intValue];
-            lutChannels = [[trimmedLine componentsSeparatedByString:@" "][1] intValue];
+            NSArray *components = [trimmedLine componentsSeparatedByString:@" "];
+            lutSize = [components[2] intValue];
+            lutChannels = [components[1] intValue];
 
             if ([passthroughFileOptions[@"fileTypeVariant"] isEqualToString:@"Discreet"]) {
-                integerMaxOutput = [[trimmedLine componentsSeparatedByString:@" "][3] intValue] - 1;
+                if (components.count >= 4) {
+                    integerMaxOutput = [components[3] intValue] - 1;
+                }
+                else{
+                    integerMaxOutput = lutSize-1;
+                }
 
             }
         }
@@ -141,10 +147,16 @@
 
     LUT1D *lut1D = LUTAsLUT1D(lut, [lut size]);
     if ([options[@"fileTypeVariant"] isEqualToString:@"Nuke"]) {
-        [string appendString:[NSString stringWithFormat:@"#\n# Discreet LUT file\n#\tChannels: 3\n# Input Samples: %d\n# Ouput Scale: %d\n#\n# Exported from CocoaLUT\n#\nLUT: %i %d\n", (int)[lut size], (int)integerMaxOutput, (int)lutChannels, (int)[lut size]]];
+        [string appendString:[NSString stringWithFormat:@"#\n# Discreet LUT file\n#\tChannels: 3\n# Input Samples: %d\n# Ouput Scale: %d\n#\n# Exported from CocoaLUT\n#\nLUT: %i %d\n\n", (int)[lut size], (int)integerMaxOutput, (int)lutChannels, (int)[lut size]]];
     }
     else if([options[@"fileTypeVariant"] isEqualToString:@"Discreet"]){
-        [string appendFormat:@"LUT: %i %i %i\n", (int)lutChannels, (int)lut.size, (int)integerMaxOutput+1];
+        if (lut.size != integerMaxOutput+1) {
+            [string appendFormat:@"LUT: %i %i %i\n\n", (int)lutChannels, (int)lut.size, (int)integerMaxOutput+1];
+        }
+        else{
+            [string appendFormat:@"LUT: %i %i\n\n", (int)lutChannels, (int)lut.size];
+        }
+
     }
 
     if (lutChannels == 3) {
