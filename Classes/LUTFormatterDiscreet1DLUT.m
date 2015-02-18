@@ -22,11 +22,6 @@
 
     passthroughFileOptions[@"fileTypeVariant"] = @"Discreet";
 
-    NSMutableArray *redCurve = [NSMutableArray array];
-    NSMutableArray *greenCurve = [NSMutableArray array];
-    NSMutableArray *blueCurve = [NSMutableArray array];
-
-
 
     NSMutableArray *trimmedLines = [NSMutableArray array];
     int integerMaxOutput = -1;
@@ -43,6 +38,8 @@
     metadata = metadataAndDescription[@"metadata"];
     description = metadataAndDescription[@"description"];
 
+    NSInteger lutChannels = 0;
+
     //trim for lut values only and grab the max code value
     for (NSString *line in lines) {
         NSString *trimmedLine = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -51,14 +48,35 @@
         }
         if([trimmedLine rangeOfString:@"Scale"].location != NSNotFound){
             integerMaxOutput = [[trimmedLine componentsSeparatedByString:@":"][1] intValue];
-            passthroughFileOptions[@"integerMaxOutput"] = @(integerMaxOutput);
+            passthroughFileOptions[@"fileTypeVariant"] = @"Nuke";
         }
         if([trimmedLine rangeOfString:@"LUT"].location != NSNotFound){
             lutSize = [[trimmedLine componentsSeparatedByString:@" "][2] intValue];
+            lutChannels = [[trimmedLine componentsSeparatedByString:@" "][1] intValue];
+
+            if ([passthroughFileOptions[@"fileTypeVariant"] isEqualToString:@"Discreet"]) {
+                integerMaxOutput = [[trimmedLine componentsSeparatedByString:@" "][3] intValue] - 1;
+
+            }
         }
     }
 
-    if(trimmedLines.count < lutSize*3){
+    if ([passthroughFileOptions[@"fileTypeVariant"] isEqualToString:@"Discreet"]){
+        passthroughFileOptions[@"lutSize"] = @(lutSize);
+    }
+
+    passthroughFileOptions[@"integerMaxOutput"] = @(integerMaxOutput);
+
+    passthroughFileOptions[@"lutChannels"] = @(lutChannels);
+
+    if (lutChannels != 1 && lutChannels != 3) {
+        @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:@"Invalid LUT channels (1 or 3 only)." userInfo:nil];
+    }
+
+    if(lutChannels == 3 && trimmedLines.count < lutSize*3){
+        @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:@"Incomplete data lines." userInfo:nil];
+    }
+    if(lutChannels == 1 && trimmedLines.count < lutSize){
         @throw [NSException exceptionWithName:@"Discreet1DParserError" reason:@"Incomplete data lines." userInfo:nil];
     }
 
@@ -68,20 +86,39 @@
         }
     }
 
-    //get red values
-    for (int i = 0; i < lutSize; i++) {
-        [redCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
+    LUT1D *lut;
+
+    if (lutChannels == 3) {
+        NSMutableArray *redCurve = [NSMutableArray array];
+        NSMutableArray *greenCurve = [NSMutableArray array];
+        NSMutableArray *blueCurve = [NSMutableArray array];
+
+        //get red values
+        for (int i = 0; i < lutSize; i++) {
+            [redCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
+        }
+        //get green values
+        for (int i = lutSize; i < 2*lutSize; i++) {
+            [greenCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
+        }
+        //get blue values
+        for (int i = 2*lutSize; i < 3*lutSize; i++) {
+            [blueCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
+        }
+
+        lut = [LUT1D LUT1DWithRedCurve:redCurve greenCurve:greenCurve blueCurve:blueCurve lowerBound:0.0 upperBound:1.0];
     }
-    //get green values
-    for (int i = lutSize; i < 2*lutSize; i++) {
-        [greenCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
-    }
-    //get blue values
-    for (int i = 2*lutSize; i < 3*lutSize; i++) {
-        [blueCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
+    else if(lutChannels == 1){
+        //get mono values
+        NSMutableArray *monoCurve = [NSMutableArray array];
+
+        for (int i = 0; i < lutSize; i++) {
+            [monoCurve addObject:@(nsremapint01([trimmedLines[i] integerValue], integerMaxOutput))];
+        }
+
+        lut = [LUT1D LUT1DWith1DCurve:monoCurve lowerBound:0 upperBound:1];
     }
 
-    LUT1D *lut = [LUT1D LUT1DWithRedCurve:redCurve greenCurve:greenCurve blueCurve:blueCurve lowerBound:0.0 upperBound:1.0];
     [lut setMetadata:metadata];
     lut.descriptionText = description;
     [lut setPassthroughFileOptions:@{[self formatterID]: passthroughFileOptions}];
@@ -99,30 +136,55 @@
 
     NSMutableString *string = [NSMutableString stringWithString:@""];
 
-    NSUInteger integerMaxOutput;
-
-
-    integerMaxOutput = [options[@"integerMaxOutput"] integerValue];
-
-    [string appendString:[NSString stringWithFormat:@"#\n# Discreet LUT file\n#\tChannels: 3\n# Input Samples: %d\n# Ouput Scale: %d\n#\n# Exported from CocoaLUT\n#\nLUT: 3 %d\n", (int)[lut size], (int)integerMaxOutput, (int)[lut size]]];
+    NSUInteger integerMaxOutput  = [options[@"integerMaxOutput"] integerValue];
+    NSUInteger lutChannels  = [options[@"lutChannels"] integerValue];
 
     LUT1D *lut1D = LUTAsLUT1D(lut, [lut size]);
+    if ([options[@"fileTypeVariant"] isEqualToString:@"Nuke"]) {
+        [string appendString:[NSString stringWithFormat:@"#\n# Discreet LUT file\n#\tChannels: 3\n# Input Samples: %d\n# Ouput Scale: %d\n#\n# Exported from CocoaLUT\n#\nLUT: %i %d\n", (int)[lut size], (int)integerMaxOutput, (int)lutChannels, (int)[lut size]]];
+    }
+    else if([options[@"fileTypeVariant"] isEqualToString:@"Discreet"]){
+        [string appendFormat:@"LUT: %i %i %i\n", (int)lutChannels, (int)lut.size, (int)integerMaxOutput+1];
+    }
 
-    //write red
-    for (int i = 0; i < [lut size]; i++) {
-        [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtR:i]*(double)integerMaxOutput) ]];
+    if (lutChannels == 3) {
+        //write red
+        for (int i = 0; i < [lut size]; i++) {
+            [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtR:i]*(double)integerMaxOutput) ]];
+        }
+        //write green
+        for (int i = 0; i < [lut size]; i++) {
+            [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtG:i]*(double)integerMaxOutput) ]];
+        }
+        //write blue
+        for (int i = 0; i < [lut size]; i++) {
+            [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtB:i]*(double)integerMaxOutput) ]];
+        }
     }
-    //write green
-    for (int i = 0; i < [lut size]; i++) {
-        [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtG:i]*(double)integerMaxOutput) ]];
+    else if (lutChannels == 1){
+        for (int i = 0; i < [lut size]; i++) {
+            [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtR:i]*(double)integerMaxOutput) ]];
+        }
     }
-    //write blue
-    for (int i = 0; i < [lut size]; i++) {
-        [string appendString:[NSString stringWithFormat:@"%d\n", (int)([lut1D valueAtB:i]*(double)integerMaxOutput) ]];
-    }
+
 
     return string;
 
+}
+
++ (NSArray *)conformanceLUTActionsForLUT:(LUT *)lut options:(NSDictionary *)options{
+    NSMutableArray *actions = [NSMutableArray arrayWithArray:[super conformanceLUTActionsForLUT:lut options:options]];
+
+    NSDictionary *exposedOptions = options[[self formatterID]];
+
+    if ([exposedOptions[@"lutChannels"] integerValue] == 1) {
+        if (!actions) {
+            actions = [[NSMutableArray alloc] init];
+        }
+        [actions addObject:[LUTAction actionWithLUTBySwizzlingWithMethod:LUT1DSwizzleChannelsMethodAverageRGB]];
+    }
+
+    return actions;
 }
 
 
@@ -135,15 +197,31 @@
 
     NSDictionary *discreetOptions =
     @{@"fileTypeVariant":@"Discreet",
-      @"integerMaxOutput": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"12-bit": @(maxIntegerFromBitdepth(12))},
-                                                                                  @{@"16-bit": @(maxIntegerFromBitdepth(16))}])};
+      @"lutSize": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"1024": @(1024)},
+                                                                         @{@"4096": @(4096)},
+                                                                         @{@"65536": @(65536)}]),
+      @"integerMaxOutput": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"10-bit": @(maxIntegerFromBitdepth(10))},
+                                                                                  @{@"12-bit": @(maxIntegerFromBitdepth(12))},
+                                                                                  @{@"16-bit": @(maxIntegerFromBitdepth(16))}]),
+      @"lutChannels": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"RGB": @(3)},
+                                                                             @{@"Mono": @(1)}])};
 
-    return @[discreetOptions];
+    NSDictionary *nukeOptions =
+    @{@"fileTypeVariant":@"Nuke",
+      @"integerMaxOutput": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"10-bit": @(maxIntegerFromBitdepth(10))},
+                                                                                  @{@"12-bit": @(maxIntegerFromBitdepth(12))},
+                                                                                  @{@"16-bit": @(maxIntegerFromBitdepth(16))}]),
+      @"lutChannels": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"RGB": @(3)},
+                                                                             @{@"Mono": @(1)}])};
+
+    return @[discreetOptions, nukeOptions];
 }
 
 + (NSDictionary *)defaultOptions{
     NSDictionary *dictionary = @{@"fileTypeVariant": @"Discreet",
-                                 @"integerMaxOutput": @(maxIntegerFromBitdepth(12))};
+                                 @"integerMaxOutput": @(maxIntegerFromBitdepth(12)),
+                                 @"lutSize":@(4096),
+                                 @"lutChannels":@(3)};
     return @{[self formatterID]:dictionary};
 }
 

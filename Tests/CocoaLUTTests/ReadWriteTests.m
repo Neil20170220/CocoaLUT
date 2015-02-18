@@ -359,7 +359,7 @@
 }
 
 - (void)testReadWriteDiscreet1D {
-    LUT1D *identityLUT = [LUT1D LUTIdentityOfSize:2048 inputLowerBound:0 inputUpperBound:1];
+    LUT1D *identityLUT = [LUT1D LUTIdentityOfSize:4096 inputLowerBound:0 inputUpperBound:1];
 
     LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:[LUTFormatterDiscreet1DLUT formatterID]];
 
