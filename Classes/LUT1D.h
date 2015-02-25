@@ -84,6 +84,8 @@
 - (double)valueAtG:(NSUInteger)g;
 - (double)valueAtB:(NSUInteger)b;
 
+- (instancetype)LUT1DByMakingReversibleWithReversibility:(LUT1DReverseStrictnessType)desiredReversibility;
+- (LUT1DReverseStrictnessType)reversibility;
 
 
 

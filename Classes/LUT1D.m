@@ -333,6 +333,62 @@
     return swizzledLUT;
 }
 
+
+//currently only assuming the LUT should have a positive slope
+- (instancetype)LUT1DByMakingReversibleWithReversibility:(LUT1DReverseStrictnessType)desiredReversibility{
+    LUT1DReverseStrictnessType selfReversibility = self.reversibility;
+
+    if (selfReversibility == LUT1DReverseStrictnessTypeStrict || desiredReversibility == LUT1DReverseStrictnessTypeAllowChangeInDirection) {
+        return self.copy;
+    }
+    
+    NSMutableArray *newCurves = [NSMutableArray array];
+
+
+    for (NSArray *curve in self.rgbCurveArray) {
+        NSMutableArray *newCurve = [NSMutableArray array];
+        for (int i = 0; i < self.size; i++) {
+            double currentValue = [curve[i] doubleValue];
+            if (i != 0) {
+                double lastValue = [newCurve[i-1] doubleValue];
+                if (desiredReversibility == LUT1DReverseStrictnessTypeStrict && lastValue >= currentValue) {
+                    [newCurve addObject:@(lastValue+.000001)];
+                }
+                else if(desiredReversibility == LUT1DReverseStrictnessTypeAllowFlatSections && lastValue > currentValue){
+                    [newCurve addObject:@(lastValue)];
+                }
+                else{
+                    [newCurve addObject:@(currentValue)];
+                }
+            }
+            else{
+                [newCurve addObject:@(currentValue)];
+            }
+        }
+        [newCurves addObject:newCurve];
+    }
+
+    LUT1D *newLUT = [LUT1D LUT1DWithRedCurve:newCurves[0]
+                                  greenCurve:newCurves[1]
+                                   blueCurve:newCurves[2]
+                                  lowerBound:self.inputLowerBound
+                                  upperBound:self.inputUpperBound];
+    [newLUT copyMetaPropertiesFromLUT:self];
+
+    return newLUT;
+}
+
+- (LUT1DReverseStrictnessType)reversibility{
+    if ([self isReversibleWithStrictnessType:LUT1DReverseStrictnessTypeStrict]) {
+        return LUT1DReverseStrictnessTypeStrict;
+    }
+    else if([self isReversibleWithStrictnessType:LUT1DReverseStrictnessTypeAllowFlatSections]){
+        return LUT1DReverseStrictnessTypeAllowFlatSections;
+    }
+
+    return LUT1DReverseStrictnessTypeAllowChangeInDirection;
+}
+
 - (instancetype)LUT1DByReversingWithStrictnessType:(LUT1DReverseStrictnessType)strictnessType
                              autoAdjustInputBounds:(BOOL)autoAdjustInputBounds{
     if(![self isReversibleWithStrictnessType:strictnessType]){
@@ -340,6 +396,12 @@
     }
 
     LUT1D *usedLUT = self.size >= 2048 ? self : [self LUTByResizingToSize:2048];
+
+    if (strictnessType == LUT1DReverseStrictnessTypeAllowChangeInDirection) {
+        usedLUT = [usedLUT LUT1DByMakingReversibleWithReversibility:LUT1DReverseStrictnessTypeAllowFlatSections];
+    }
+
+
 
     NSArray *rgbCurves = @[usedLUT.redCurve, usedLUT.greenCurve, usedLUT.blueCurve];
 
@@ -415,6 +477,10 @@
 }
 
 - (BOOL)isReversibleWithStrictnessType:(LUT1DReverseStrictnessType)strictnessType{
+    if (strictnessType == LUT1DReverseStrictnessTypeAllowChangeInDirection) {
+        return YES;
+    }
+
     BOOL isIncreasing = YES;
     BOOL isDecreasing = YES;
 
