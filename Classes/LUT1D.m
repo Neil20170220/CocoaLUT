@@ -162,7 +162,7 @@
     LUT *selfResizedLUT = [self LUTByResizingToSize:[combinedLUT size]];
 
     [combinedLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
-        LUTColor *startColor = [selfResizedLUT colorAtR:r g:g b:b];
+        LUTColor *startColor = [selfResizedLUT colorAtColor:[combinedLUT identityColorAtR:r g:g b:b]];
         LUTColor *newColor = [otherLUT colorAtColor:startColor];
         [combinedLUT setColor:newColor r:r g:g b:b];
     }];
