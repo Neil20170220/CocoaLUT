@@ -10,6 +10,9 @@
 #import "CocoaLUT.h"
 #import "LUTFormatter.h"
 #import "LUTError.h"
+
+#import <MustOverride/MustOverride.h>
+
 #if defined(COCOAPODS_POD_AVAILABLE_VVSceneLinearImageRep)
 #import <VVSceneLinearImageRep/NSImage+SceneLinear.h>
 #endif
@@ -107,7 +110,8 @@
                       LUTDataType:(LUTDataType)lutDataType
                   inputLowerBound:(double)inputLowerBound
                   inputUpperBound:(double)inputUpperBound{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (instancetype)LUTFromData:(NSData *)data formatterID:(NSString *)formatterID error:(NSError * __autoreleasing *)error
@@ -219,7 +223,8 @@
 + (instancetype)LUTOfSize:(NSUInteger)size
           inputLowerBound:(double)inputLowerBound
           inputUpperBound:(double)inputUpperBound{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (instancetype)LUTIdentityOfSize:(NSUInteger)size
@@ -243,7 +248,7 @@
 }
 
 - (void)LUTLoopWithBlock:(void (^)(size_t r, size_t g, size_t b))block{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
 }
 
 
@@ -379,7 +384,8 @@
 }
 
 - (instancetype)LUTByCombiningWithLUT:(LUT *)otherLUT {
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 - (instancetype)LUTByChangingInputLowerBound:(double)inputLowerBound
@@ -438,15 +444,17 @@
 }
 
 - (LUTColor *)colorAtR:(NSUInteger)r g:(NSUInteger)g b:(NSUInteger)b{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 - (LUTColor *)colorAtInterpolatedR:(double)redPoint g:(double)greenPoint b:(double)bluePoint{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 - (void)setColor:(LUTColor *)color r:(NSUInteger)r g:(NSUInteger)g b:(NSUInteger)b{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
 }
 
 - (LUTColor *)maximumOutputColor{
@@ -533,7 +541,8 @@
 }
 
 - (bool)equalsLUT:(LUT *)comparisonLUT{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return NO;
 }
 
 - (bool)equalsLUTEssence:(LUT *)comparisonLUT
@@ -731,11 +740,13 @@
 }
 
 - (NSData *)bitmapDataWithType:(LUTDataType)lutDataType{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 - (CIFilter *)coreImageFilterWithColorSpace:(CGColorSpaceRef)colorSpace {
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 - (CIFilter *)coreImageFilterWithCurrentColorSpace {

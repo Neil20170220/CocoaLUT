@@ -8,6 +8,7 @@
 
 #import "LUTFormatterImageBased.h"
 #import "M13OrderedDictionary.h"
+#import <MustOverride/MustOverride.h>
 
 @implementation LUTFormatterImageBased
 
@@ -101,11 +102,13 @@
 }
 
 + (NSImage *)imageFromLUT:(LUT *)lut bitdepth:(NSUInteger)bitdepth{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (LUT *)LUTFromImage:(NSImage *)image{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 #endif

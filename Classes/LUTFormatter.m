@@ -7,7 +7,7 @@
 //
 
 #import "LUTFormatter.h"
-
+#import <MustOverride/MustOverride.h>
 
 
 
@@ -156,7 +156,8 @@ static NSMutableArray *allFormatters;
 }
 
 + (LUTFormatterOutputType)outputType{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return LUTFormatterOutputTypeNone;
 }
 
 //structure is NSArray(of the variants)->NSDictionaries(of the variants options)->Strings or NSDictionaries with the option name or dicts of names:value
@@ -207,19 +208,23 @@ static NSMutableArray *allFormatters;
 }
 
 + (NSString *)utiString{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (NSArray *)fileExtensions{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (NSString *)formatterName{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (NSString *)formatterID{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
 }
 
 + (NSString *)nameWithExtensions{
@@ -250,11 +255,13 @@ static NSMutableArray *allFormatters;
 }
 
 + (BOOL)canRead{
-    @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return NO;
 }
 
 + (BOOL)canWrite{
-     @throw [NSException exceptionWithName:@"NotImplemented" reason:[NSString stringWithFormat:@"\"%s\" Not Implemented", __func__] userInfo:nil];
+    SUBCLASS_MUST_OVERRIDE;
+    return NO;
 }
 
 + (NSDictionary *)constantConstraints{
