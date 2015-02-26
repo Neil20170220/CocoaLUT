@@ -22,6 +22,17 @@
 #import "NSImage+CocoaLUT.h"
 #endif
 
+@implementation NSBundle (NSBundleCocoaLUTExtension)
+-(LUT *)LUTForResource:(NSString *)name extension:(NSString *)extension{
+    NSURL *url = [self URLForResource:name withExtension:extension];
+    if (![url checkResourceIsReachableAndReturnError:nil]) {
+        return nil;
+    }
+    
+    return [LUT LUTFromURL:url error:nil];
+}
+@end
+
 @interface LUT ()
 @end
 

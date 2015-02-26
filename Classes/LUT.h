@@ -42,7 +42,6 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
     LUTImageRenderPathDirect
 };
 
-
 /**
  *  A three-dimensional color lookup table.
  */
@@ -283,4 +282,8 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 #endif
 
 
+@end
+
+@interface NSBundle (NSBundleCocoaLUTExtension)
+-(LUT *)LUTForResource:(NSString *)name extension:(NSString *)extension;
 @end
