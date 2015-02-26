@@ -177,8 +177,8 @@
 
 - (LUT *)LUTByCombiningWithLUT:(LUT *)otherLUT {
     NSUInteger outputSize = MIN(MAX(self.size, otherLUT.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE);
-    double usedInputLowerBound = MIN(self.inputLowerBound, otherLUT.inputLowerBound);
-    double usedInputUpperBound = MAX(self.inputUpperBound, otherLUT.inputUpperBound);
+    double usedInputLowerBound = MAX(self.inputLowerBound, otherLUT.inputLowerBound);
+    double usedInputUpperBound = MIN(self.inputUpperBound, otherLUT.inputUpperBound);
     
     LUT3D *newLUT = [LUT3D LUTOfSize:outputSize inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
     [newLUT copyMetaPropertiesFromLUT:self];
