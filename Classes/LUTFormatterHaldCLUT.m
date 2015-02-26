@@ -151,6 +151,10 @@
     return newOptions;
 }
 
++ (NSArray *)fileExtensions{
+    return [super fileExtensions];
+}
+
 + (NSDictionary *)defaultOptions{
     NSMutableDictionary *defaultsExposed = [[super defaultOptions][[self formatterID]] mutableCopy];
     defaultsExposed[@"lutSize"] = @(36);

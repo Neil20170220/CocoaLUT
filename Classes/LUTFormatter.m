@@ -156,7 +156,6 @@ static NSMutableArray *allFormatters;
 }
 
 + (LUTFormatterOutputType)outputType{
-    SUBCLASS_MUST_OVERRIDE;
     return LUTFormatterOutputTypeNone;
 }
 
@@ -208,7 +207,6 @@ static NSMutableArray *allFormatters;
 }
 
 + (NSString *)utiString{
-    SUBCLASS_MUST_OVERRIDE;
     return nil;
 }
 
@@ -255,12 +253,10 @@ static NSMutableArray *allFormatters;
 }
 
 + (BOOL)canRead{
-    SUBCLASS_MUST_OVERRIDE;
     return NO;
 }
 
 + (BOOL)canWrite{
-    SUBCLASS_MUST_OVERRIDE;
     return NO;
 }
 

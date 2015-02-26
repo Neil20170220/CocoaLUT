@@ -125,6 +125,14 @@
   //  #endif
 }
 
++ (NSString *)formatterName{
+    return @"LUTFormatterImageBased - If you are seeing this there is an error.";
+}
+
++ (NSString *)formatterID{
+    return @"LUTFormatterImageBased - If you are seeing this there is an error.";
+}
+
 + (BOOL)canRead{
     #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
     return NO;

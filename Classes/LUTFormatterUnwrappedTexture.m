@@ -101,6 +101,10 @@
 }
 #endif
 
++ (NSArray *)fileExtensions{
+    return [super fileExtensions];
+}
+
 + (NSString *)formatterName{
     return @"Unwrapped Cube Image 3D LUT";
 }

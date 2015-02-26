@@ -142,6 +142,10 @@
 
 #endif
 
++ (NSArray *)fileExtensions{
+    return [super fileExtensions];
+}
+
 + (NSString *)formatterName{
     return @"CMS Test Pattern Image 3D LUT";
 }
