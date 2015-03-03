@@ -19,6 +19,7 @@
 @property (assign, nonatomic) double animationPercentage;
 
 - (void)setSceneWithLUT:(LUT *)lut;
+- (void)resetCamera;
 
 @end
 #endif

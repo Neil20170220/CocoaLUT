@@ -71,6 +71,19 @@
 
 }
 
+- (void)resetCamera{
+    dispatch_async(self.serialDispatch, ^{
+    LUTPreviewScene *scene = [LUTPreviewScene sceneForLUT:[(LUTPreviewScene *)((SCNView *)self.view).scene lut]];
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [SCNTransaction begin];
+            ((SCNView *)self.view).scene = scene;
+            self.animationPercentage = 1.0;
+            [SCNTransaction commit];
+        });
+    });
+
+}
+
 - (void)setAnimationPercentage:(double)animationPercentage{
     _animationPercentage = animationPercentage;
     [(LUTPreviewScene *)((SCNView *)self.view).scene setAnimationPercentage:animationPercentage];
