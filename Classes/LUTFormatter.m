@@ -286,6 +286,13 @@ static NSMutableArray *allFormatters;
     NSDictionary *exposedOptions = options[[self formatterID]];
     NSDictionary *formatterConstantConstraints = [self constantConstraints];
 
+    if (isLUT1D(lut) && [self outputType] == LUTFormatterOutputType3D) {
+        [arrayOfActions addObject:[LUTAction actionWithLUTByConvertingToLUT3D]];
+    }
+    else if(isLUT3D(lut) && [self outputType] == LUTFormatterOutputType1D){
+        [arrayOfActions addObject:[LUTAction actionWithLUTByConvertingToLUT1D]];
+    }
+
     if(formatterConstantConstraints != nil){
         if(formatterConstantConstraints[@"inputBounds"] != nil){
             NSArray *array = formatterConstantConstraints[@"inputBounds"];
