@@ -52,6 +52,8 @@ typedef NS_ENUM(NSInteger, LUTFormatterRole) {
 
 + (NSArray *)lut3DFormatterFileExtensions;
 
++ (NSArray *)allWritableFormatters;
+
 /**
  *  Returns a new LUT from a file in the formatter's file type..
  *

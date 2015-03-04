@@ -58,6 +58,17 @@ static NSMutableArray *allFormatters;
     return array;
 }
 
++ (NSArray *)allWritableFormatters{
+    NSMutableArray *formatters = [NSMutableArray array];
+    for(LUTFormatter *formatter in allFormatters){
+        if([[formatter class] canWrite]){
+            [formatters addObject:formatter];
+        }
+
+    }
+    return [NSArray arrayWithArray:formatters];
+}
+
 + (NSArray *)LUTFormattersForFileExtension:(NSString *)fileExtension{
     NSMutableArray *formatters = [NSMutableArray array];
     for(LUTFormatter *formatter in allFormatters){
