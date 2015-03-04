@@ -171,9 +171,23 @@
         NSLog(@"Formatter not found for ID \"%@\".", formatterID);
         return NO;
     }
-    if([[formatter class] isValidWriterForLUTType:self] == NO){
-        NSLog(@"%@ is not a valid writer for LUT (%@) with options: %@.", [[formatter class] formatterName], self, options);
-        return NO;
+
+    LUT *outputLUT = self.copy;
+
+    if([[formatter class] isValidWriterForLUTType:outputLUT] == NO){
+        if (conformLUT && [formatter.class canWrite] && [formatter.class outputType] != LUTFormatterOutputTypeNone && [formatter.class outputType] != LUTFormatterOutputTypeEither) {
+            //must be a 1D/3D issue
+            if (isLUT1D(outputLUT) && [formatter.class outputType] == LUTFormatterOutputType3D) {
+                outputLUT = [(LUT1D *)outputLUT LUT3DOfSize:MIN(outputLUT.size, COCOALUT_SUGGESTED_MAX_LUT3D_SIZE)];
+            }
+            else if (isLUT3D(outputLUT) && [formatter.class outputType] == LUTFormatterOutputType1D) {
+                outputLUT = [(LUT3D *)outputLUT LUT1D];
+            }
+        }
+        else{
+            NSLog(@"%@ is not a valid writer for LUT (%@) with options: %@.", [[formatter class] formatterName], outputLUT, options);
+            return NO;
+        }
     }
     if (options == nil) {
         options = [[formatter class] defaultOptions];
@@ -181,7 +195,7 @@
 
     //----
 
-    NSArray *actionsForConformance = [[formatter class] conformanceLUTActionsForLUT:self options:options];
+    NSArray *actionsForConformance = [[formatter class] conformanceLUTActionsForLUT:outputLUT options:options];
 
     if (actionsForConformance.count != 0 && conformLUT == NO) {
         NSMutableString *conformanceInfo = [[NSMutableString alloc] init];
@@ -194,7 +208,7 @@
         NSLog(@"LUT requires conformance before saving. Info:\n%@", conformanceInfo);
         return NO;
     }
-    LUT *outputLUT = [self copy];
+
     for(LUTAction *action in actionsForConformance){
         outputLUT = [action LUTByUsingActionBlockOnLUT:outputLUT];
     }
