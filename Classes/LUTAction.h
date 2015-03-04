@@ -27,6 +27,9 @@
 
 -(NSString *)actionDetails;
 
++(instancetype)actionWithLUTByConvertingToLUT1D;
++(instancetype)actionWithLUTByConvertingToLUT3D;
+
 +(instancetype)actionWithLUTByChangingInputLowerBound:(double)inputLowerBound
                                       inputUpperBound:(double)inputUpperBound;
 

@@ -112,6 +112,32 @@
                        actionMetadata:actionMetadata];
 }
 
++(instancetype)actionWithLUTByConvertingToLUT3D{
+    M13OrderedDictionary *actionMetadata =
+    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"ConvertTo3D"}]);
+
+    return [LUTAction actionWithBlock:^LUT *(LUT *lut) {
+        NSUInteger newSize = MIN(lut.size, COCOALUT_SUGGESTED_MAX_LUT3D_SIZE);
+        return LUTAsLUT3D(lut, newSize);
+    }
+                           actionName:[NSString stringWithFormat:@"Convert to 3D"]
+                       actionMetadata:actionMetadata];
+
+}
+
++(instancetype)actionWithLUTByConvertingToLUT1D{
+    M13OrderedDictionary *actionMetadata =
+    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"ConvertTo1D"}]);
+
+    return [LUTAction actionWithBlock:^LUT *(LUT *lut) {
+        return LUTAsLUT1D(lut, lut.size);
+    }
+                           actionName:[NSString stringWithFormat:@"Convert to 1D"]
+                       actionMetadata:actionMetadata];
+    
+}
+
+
 +(instancetype)actionWithLUT3DByConvertingColorTemperatureFromSourceColorSpace:(LUTColorSpace *)sourceColorSpace
                                                         sourceTransferFunction:(LUTColorTransferFunction *)sourceTransferFunction
                                                         sourceColorTemperature:(LUTColorSpaceWhitePoint *)sourceColorTemperature
