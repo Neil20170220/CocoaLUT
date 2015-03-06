@@ -212,6 +212,20 @@
     return [lutData writeToURL:url atomically:atomically];
 }
 
+- (LUT *)LUTByConformingLUTWithOptions:(NSDictionary *)options{
+    NSString *formatterID = options.allKeys[0];
+    LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:formatterID];
+    NSArray *actionsForConformance = [[formatter class] conformanceLUTActionsForLUT:self options:options];
+
+    LUT *newLUT = self.copy;
+
+    for(LUTAction *action in actionsForConformance){
+        newLUT = [action LUTByUsingActionBlockOnLUT:newLUT];
+    }
+
+    return newLUT;
+}
+
 - (NSData *)dataFromLUTWithFormatterID:(NSString *)formatterID
                                options:(NSDictionary *)options{
     LUTFormatter *formatter = [LUTFormatter LUTFormatterWithID:formatterID];
