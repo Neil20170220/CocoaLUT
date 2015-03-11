@@ -133,7 +133,8 @@
              [self canonLogTransferFunction],
              [self bmdFilmTransferFunction],
              [self bmdFilm4KTransferFunction],
-             [self vLogTransferFunction]];
+             [self vLogTransferFunction],
+             [self dolbyPQST2084]];
 }
 
 +(instancetype)linearTransferFunction{
@@ -193,6 +194,27 @@
                                                                      return clamp(output, 0.0, 1.0);}
                                                                                        name:@"Cineon"
                                                                                        type:LUTColorTransferFunctionTypeSceneLinear];
+}
+
++ (instancetype)dolbyPQST2084{
+    double c1 = 0.8359375; //3424/4096 c3 - c2 + 1
+    double c2 = 18.8515625; //2413/4096
+    double c3 = 18.6875; //2392/4096
+
+    double m1 = 0.1593017578125; //2610/4096 * .25
+    double m2 = 78.84375; //2523/4096 * 128
+
+    return [LUTColorTransferFunction LUTColorTransferFunctionWithTransformedToLinearBlock1D:^double(double value){
+        //HDR to nonlinear
+        value = clamp(value, 0.0, 1.0);
+
+        return pow((c1+c2*pow(value, m1))/(1.0+c3*pow(value, m1)), m2);}
+                                                                 linearToTransformedBlock1D:^double(double value){
+                                                                     //nonlinear to HDR
+                                                                     double output = pow(MAX(pow(value, 1.0/m2) - c1, 0.0)/(c2-c3*pow(value, 1.0/m2)), 1.0/m1);
+                                                                     return clamp(output, 0.0, 1.0);}
+                                                                                       name:@"Dolby PQ ST-2084"
+                                                                                       type:LUTColorTransferFunctionType01];
 }
 
 + (instancetype)redLogFilmTransferFunction{
