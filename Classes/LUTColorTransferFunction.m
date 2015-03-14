@@ -451,10 +451,11 @@
     });
 
     return [LUTColorTransferFunction LUTColorTransferFunctionWithTransformedToLinearBlock1D:^double(double value){
+        value = clamp(value, 0, 1);
         return [bmdFilmToLinear colorAtColor:[LUTColor colorWithRed:value green:value blue:value]].red;
     }
                                                                  linearToTransformedBlock1D:^double(double value){
-     return [linearToBMDFilm colorAtColor:[LUTColor colorWithRed:value green:value blue:value]].red;}
+     return clamp([linearToBMDFilm colorAtColor:[LUTColor colorWithRed:value green:value blue:value]].red, 0, 1);}
 
                                                                                        name:@"BMDFilm"
                                                                                        type:LUTColorTransferFunctionTypeSceneLinear];
@@ -477,12 +478,13 @@
 
 
     return [LUTColorTransferFunction LUTColorTransferFunctionWithTransformedToLinearBlock1D:^double(double value){
+        value = clamp(value, 0, 1);
         return [bmdFilm4KToLinear colorAtColor:[LUTColor colorWithRed:value green:value blue:value]].red;
     }
                                                                  linearToTransformedBlock1D:^double(double value){
 
 
-                                                                     return [linearToBMDFilm4K colorAtColor:[LUTColor colorWithRed:value green:value blue:value]].red;}
+                                                                     return clamp([linearToBMDFilm4K colorAtColor:[LUTColor colorWithRed:value green:value blue:value]].red, 0, 1);}
 
                                                                                        name:@"BMDFilm4K"
                                                                                        type:LUTColorTransferFunctionTypeSceneLinear];
