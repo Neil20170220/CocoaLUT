@@ -53,9 +53,9 @@
         self.metadata = [aDecoder decodeObjectForKey:@"metadata"];
         self.userInfo = [aDecoder decodeObjectForKey:@"userInfo"]?:[NSMutableDictionary dictionary];
         self.passthroughFileOptions = [aDecoder decodeObjectForKey:@"passthroughFileOptions"];
-        self.size = [aDecoder decodeIntegerForKey:@"size"];
-        self.inputLowerBound = [aDecoder decodeDoubleForKey:@"inputLowerBound"];
-        self.inputUpperBound = [aDecoder decodeDoubleForKey:@"inputUpperBound"];
+        _size = [aDecoder decodeIntegerForKey:@"size"];
+        _inputLowerBound = [aDecoder decodeDoubleForKey:@"inputLowerBound"];
+        _inputUpperBound = [aDecoder decodeDoubleForKey:@"inputUpperBound"];
         
         if(self.inputLowerBound >= self.inputUpperBound){
             @throw [NSException exceptionWithName:@"LUTCreationError" reason:@"Input Lower Bound >= Input Upper Bound" userInfo:nil];
@@ -83,9 +83,9 @@
         self.metadata = [NSMutableDictionary dictionary];
         self.passthroughFileOptions = [NSDictionary dictionary];
         self.userInfo = [NSMutableDictionary dictionary];
-        self.size = size;
-        self.inputLowerBound = inputLowerBound;
-        self.inputUpperBound = inputUpperBound;
+        _size = size;
+        _inputLowerBound = inputLowerBound;
+        _inputUpperBound = inputUpperBound;
     }
     return self;
 }
