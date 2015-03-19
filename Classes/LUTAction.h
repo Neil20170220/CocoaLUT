@@ -69,9 +69,8 @@
 +(instancetype)actionWithLUTByCombiningBehindWithLUT:(LUT *)lutToCombineBehind
                                               lutURL:(NSURL *)lutURL;
 
-+(instancetype)actionWithLUTByScalingLegalToExtended;
-
-+(instancetype)actionWithLUTByScalingExtendedToLegal;
++(instancetype)actionWithLUTByScalingVideoToData;
++(instancetype)actionWithLUTByScalingDataToVideo;
 
 +(instancetype)actionWithLUTByScalingTo01;
 +(instancetype)actionWithLUTByScalingRGBTo01;
