@@ -55,8 +55,8 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 @property (strong) NSString *descriptionText;
 
 @property (assign, readonly) NSUInteger size;
-@property (assign, readonly) double inputLowerBound;
-@property (assign, readonly) double inputUpperBound;
+@property (assign) double inputLowerBound;
+@property (assign) double inputUpperBound;
 
 
 /**
