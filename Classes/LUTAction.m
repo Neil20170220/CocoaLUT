@@ -368,9 +368,9 @@
                        actionMetadata:actionMetadata];
 }
 
-+(instancetype)actionWithLUTByScalingVideoToData{
++(instancetype)actionWithLUTByScalingLegalToFull{
     M13OrderedDictionary *actionMetadata =
-    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"ScaleVideoToData"}]);
+    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"ScaleLegalToFull"}]);
 
     return [LUTAction actionWithBlock:^LUT *(LUT *lut) {
         return [lut LUTByRemappingValuesWithInputLow:LEGAL_LEVELS_MIN
@@ -379,13 +379,13 @@
                                           outputHigh:EXTENDED_LEVELS_MAX
                                              bounded:NO];
     }
-                           actionName:[NSString stringWithFormat:@"Video to Data"]
+                           actionName:[NSString stringWithFormat:@"Legal to Full"]
                        actionMetadata:actionMetadata];
 }
 
-+(instancetype)actionWithLUTByScalingDataToVideo{
++(instancetype)actionWithLUTByScalingFullToLegal{
     M13OrderedDictionary *actionMetadata =
-    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"ScaleDataToVideo"}]);
+    M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"id":@"ScaleFullToLegal"}]);
 
     return [LUTAction actionWithBlock:^LUT *(LUT *lut) {
         return [lut LUTByRemappingValuesWithInputLow:EXTENDED_LEVELS_MIN
@@ -394,7 +394,7 @@
                                           outputHigh:LEGAL_LEVELS_MAX
                                              bounded:NO];
     }
-                           actionName:[NSString stringWithFormat:@"Data to Video"]
+                           actionName:[NSString stringWithFormat:@"Full to Legal"]
                        actionMetadata:actionMetadata];
 }
 
