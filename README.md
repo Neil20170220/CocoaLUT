@@ -68,7 +68,7 @@ Do you need something like this in Python? Try [pylut](http://github.com/gregcot
 
 - [Wil Gieseler](https://github.com/wilg) (@wilg)
 - [Greg Cotten](https://github.com/gregcotten) (@gregcotten)
-- [Tashi Trieu](https://github.com/tashdor) (@tashitrieu) - Additional Color Science
+- [Tashi Trieu](https://github.com/tashdor) (@tashdor) - Additional Color Science
 
 ## License
 
