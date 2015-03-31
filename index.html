@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>CocoaLUT by videovillage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">CocoaLUT</h1>
+      <h2 class="project-tagline">LUT (3D lookup tables) for Cocoa applications.</h2>
+      <a href="https://github.com/videovillage/CocoaLUT" class="btn">View on GitHub</a>
+      <a href="https://github.com/videovillage/CocoaLUT/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/videovillage/CocoaLUT/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="cocoalut" class="anchor" href="#cocoalut" aria-hidden="true"><span class="octicon octicon-link"></span></a>CocoaLUT</h1>
+
+<p><a href="https://travis-ci.org/videovillage/CocoaLUT"><img src="http://img.shields.io/travis/videovillage/CocoaLUT.svg?style=flat" alt="Build Status"></a>
+<a href="https://coveralls.io/r/videovillage/CocoaLUT?branch=master"><img src="https://img.shields.io/coveralls/videovillage/CocoaLUT.svg?style=flat" alt="Coverage Status"></a>
+<a href="http://cocoadocs.org/docsets/CocoaLUT"><img src="https://img.shields.io/cocoapods/v/CocoaLUT.svg?style=flat" alt="Version"></a>
+<a href="http://cocoadocs.org/docsets/CocoaLUT"><img src="https://img.shields.io/cocoapods/p/CocoaLUT.svg?style=flat" alt="Platform"></a>
+<a href="http://cocoadocs.org/docsets/CocoaLUT"><img src="https://img.shields.io/cocoapods/l/CocoaLUT.svg?style=flat" alt="License"></a></p>
+
+<p>CocoaLUT is a tool for importing, exporting, and manipulating <a href="https://en.wikipedia.org/wiki/3D_lookup_table">3D look up tables</a> (3D LUTs) and 1D look up tables (1D LUTs) for colors. LUTs are often used in film and video finishing, graphics, video games, and rendering.</p>
+
+<p>The goal of this project is to have a fast, modern Objective-C (and soon, Swift) library that works on both iOS and OS X.</p>
+
+<p><a href="http://lattice.videovillage.co"><img src="lattice.png" alt="Lattice"></a></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>Reads and writes 3D LUTs
+
+<ul>
+<li>DaVinci Resolve Cube LUT (.cube)</li>
+<li>Autodesk 3D LUT (.3dl)</li>
+<li>Quantel 3D LUT (.txt)</li>
+<li>FSI DAT 3D LUT (.dat)</li>
+<li>DVS Clipster 3D LUT (.xml, .txt)</li>
+<li>Nucoda CMS LUT (.cms)</li>
+<li>Resolve DAT 3D LUT (.dat)</li>
+<li>DaVinci 3D LUT (.davlut)</li>
+<li>Unwrapped Texture LUT Image (.tiff, .dpx, .png)</li>
+<li>CMS Test Pattern LUT Image (.tiff, .dpx, .png)</li>
+<li>Hald CLUT Image (.tiff, .dpx, .png)</li>
+</ul>
+</li>
+<li>Reads and writes 1D LUTs
+
+<ul>
+<li>DaVinci Resolve Cube LUT (.cube)</li>
+<li>Nucoda CMS LUT (.cms)</li>
+<li>DaVinci Resolve 1D LUT (.ilut, .olut)</li>
+<li>Discreet 1D LUT (.lut)</li>
+<li>Arri Look 1D tone map only (.xml) </li>
+</ul>
+</li>
+<li>Reads non-LUT formats as LUTs
+
+<ul>
+<li>Arri Look (.xml) as a 3D LUT</li>
+<li>ICC/ColorSync Profiles (.icc, .icm, .pf, .prof) as a 3D LUT <em>(OS X only)</em>
+</li>
+</ul>
+</li>
+<li>Has a format-independent internal data structure. You can create LUTs and use them in-memory.</li>
+<li>Apply LUTs to NSImage, CIImage, and UIImage</li>
+<li>Generate Core Image Filters (<a href="https://github.com/videovillage/VVLUT1DFilter">VVLUT1DFilter</a> / CIColorCube) from LUTs</li>
+<li>Generate visualizations for LUTs with Scene Kit</li>
+<li>Resize LUTs</li>
+<li>Reverse 1D LUTs</li>
+<li>Extract the color shift from a 3D LUT</li>
+<li>Extract the contrast shift from a 3D LUT</li>
+<li>Convert the color space or color temperature of a LUT</li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>CocoaLUT is available through <a href="http://cocoapods.org">CocoaPods</a>, to install
+it simply add the following line to your Podfile:</p>
+
+<pre><code>pod 'CocoaLUT'
+</code></pre>
+
+<p>To gain full functionality you should also probably add <a href="https://github.com/videovillage/VVLUT1DFilter">VVLUT1DFilter</a>, a Core Image filter optimized for 1D LUTs, and <a href="https://github.com/videovillage/VVSceneLinearImageRep">VVSceneLinearImageRep</a>, a subclass of NSBitmapImageRep that specifically handles EXR data.</p>
+
+<pre><code>pod 'VVLUT1DFilter'
+pod 'VVSceneLinearImageRep'
+</code></pre>
+
+<h2>
+<a id="related" class="anchor" href="#related" aria-hidden="true"><span class="octicon octicon-link"></span></a>Related</h2>
+
+<p>This project uses <a href="http://github.com/wilg/LUTSpec">LUTSpec</a> for UTI standardization.</p>
+
+<p>Do you need something like this in Python? Try <a href="http://github.com/gregcotten/pylut">pylut</a>.</p>
+
+<h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<ul>
+<li>
+<a href="https://github.com/wilg">Wil Gieseler</a> (<a href="https://github.com/wilg" class="user-mention">@wilg</a>)</li>
+<li>
+<a href="https://github.com/gregcotten">Greg Cotten</a> (<a href="https://github.com/gregcotten" class="user-mention">@gregcotten</a>)</li>
+<li>
+<a href="https://github.com/tashdor">Tashi Trieu</a> (@tashitrieu) - Additional Color Science</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>CocoaLUT is available under the MIT license. See the LICENSE file for more info.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/videovillage/CocoaLUT">CocoaLUT</a> is maintained by <a href="https://github.com/videovillage">videovillage</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
