@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, LUT1DReverseStrictnessType) {
 
 typedef NS_ENUM(NSInteger, LUTDataType) {
     LUTDataTypeRGBAf,
+    LUTDataTypeRGBf,
     LUTDataTypeRGBd
 };
 

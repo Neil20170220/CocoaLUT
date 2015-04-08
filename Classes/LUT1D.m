@@ -108,6 +108,16 @@
         }
         return lut1D;
     }
+    else if (lutDataType == LUTDataTypeRGBf){
+        LUT1D *lut1D = [LUT1D LUTOfSize:(data.length/sizeof(float))/3 inputLowerBound:inputLowerBound inputUpperBound:inputUpperBound];
+
+        float *bitmap = (float *)data.bytes;
+        for (int i = 0; i < lut1D.size*3; i+=3) {
+            NSInteger currentIndex = i/3;
+            [lut1D setColor:[LUTColor colorWithRed:bitmap[i] green:bitmap[i+1] blue:bitmap[i+2]] r:currentIndex g:currentIndex b:currentIndex];
+        }
+        return lut1D;
+    }
     else{
         return nil;
     }
@@ -562,6 +572,18 @@
             lutArray[i*3] = color.red;
             lutArray[i*3+1] = color.green;
             lutArray[i*3+2] = color.blue;
+        }
+
+        return [NSData dataWithBytesNoCopy:lutArray length:dataSize];
+    }
+    else if (lutDataType == LUTDataTypeRGBf){
+        size_t dataSize = sizeof(float)*3*self.size;
+        float* lutArray = (float *)malloc(dataSize);
+        for (int i = 0; i < self.size; i++) {
+            LUTColor *color = [self colorAtR:i g:i b:i];
+            lutArray[i*3] = (float)color.red;
+            lutArray[i*3+1] = (float)color.green;
+            lutArray[i*3+2] = (float)color.blue;
         }
 
         return [NSData dataWithBytesNoCopy:lutArray length:dataSize];

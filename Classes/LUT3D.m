@@ -115,6 +115,22 @@
 
         return lut3D;
     }
+    else if (lutDataType == LUTDataTypeRGBf){
+        LUT3D *lut3D = [LUT3D LUTOfSize:cbrt((data.length/sizeof(float))/3) inputLowerBound:inputLowerBound inputUpperBound:inputUpperBound];
+
+        float *bitmap = (float *)data.bytes;
+
+        for (int i = 0; i < 3*lut3D.size*lut3D.size*lut3D.size; i+=3) {
+            int currentCubeIndex = i/3;
+            int redIndex = currentCubeIndex % lut3D.size;
+            int greenIndex = ((currentCubeIndex % (lut3D.size * lut3D.size)) / (lut3D.size) );
+            int blueIndex = currentCubeIndex / (lut3D.size * lut3D.size);
+
+            [lut3D setColor:[LUTColor colorWithRed:bitmap[i] green:bitmap[i+1] blue:bitmap[i+2]] r:redIndex g:greenIndex b:blueIndex];
+        }
+        
+        return lut3D;
+    }
     else{
         return nil;
     }
@@ -576,6 +592,23 @@
             cubeData[offset]   = (double)transformedColor.red;
             cubeData[offset+1] = (double)transformedColor.green;
             cubeData[offset+2] = (double)transformedColor.blue;
+        }];
+
+        return [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
+    }
+    else if(lutDataType == LUTDataTypeRGBf){
+        size_t size = self.size;
+        size_t cubeDataSize = size * size * size * sizeof (float) * 3;
+        float *cubeData = (float *) malloc (cubeDataSize);
+
+        [self LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+            LUTColor *transformedColor = [self colorAtR:r g:g b:b];
+
+            size_t offset = 3*(b*size*size + g*size + r);
+
+            cubeData[offset]   = (float)transformedColor.red;
+            cubeData[offset+1] = (float)transformedColor.green;
+            cubeData[offset+2] = (float)transformedColor.blue;
         }];
 
         return [NSData dataWithBytesNoCopy:cubeData length:cubeDataSize freeWhenDone:YES];
