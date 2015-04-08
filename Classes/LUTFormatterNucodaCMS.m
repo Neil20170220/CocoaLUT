@@ -193,7 +193,7 @@
     }
 
 
-    passthroughFileOptions[@"fileTypeVariant"] = [NSString stringWithFormat:@"Nucoda v%i", (int)nucodaVersion];
+    passthroughFileOptions[@"fileTypeVariant"] = [NSString stringWithFormat:@"v%i", (int)nucodaVersion];
 
     NSArray *lutLines = [lines subarrayWithRange:NSMakeRange(cubeLinesStartIndex, lines.count - cubeLinesStartIndex)];
 
@@ -427,18 +427,18 @@
 
 + (NSArray *)allOptions{
 
-    NSDictionary *v1Options = @{@"fileTypeVariant":@"Nucoda v1"};
+    NSDictionary *v1Options = @{@"fileTypeVariant":@"v1"};
 
-    NSDictionary *v2Options = @{@"fileTypeVariant":@"Nucoda v2"};
+    NSDictionary *v2Options = @{@"fileTypeVariant":@"v2"};
 
-    NSDictionary *v3Options = @{@"fileTypeVariant":@"Nucoda v3"};
+    NSDictionary *v3Options = @{@"fileTypeVariant":@"v3"};
 
     return @[v3Options, v2Options, v1Options];
 }
 
 
 + (NSDictionary *)defaultOptions{
-    NSDictionary *dictionary = @{@"fileTypeVariant": @"Nucoda v3"};
+    NSDictionary *dictionary = @{@"fileTypeVariant": @"v3"};
     return @{[self formatterID]:dictionary};
 }
 
