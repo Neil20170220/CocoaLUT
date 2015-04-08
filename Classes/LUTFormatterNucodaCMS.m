@@ -72,7 +72,7 @@
             if ([line rangeOfString:@"LUT_3D_SIZE"].location != NSNotFound) {
                 if (data[@"lut3DSize"] != nil){
                     @throw [NSException exceptionWithName:@"NucodaCMSParserError"
-                                                   reason:@"3D Size parameter read already once."
+                                                   reason:@"3D Size parameter already read once."
                                                  userInfo:nil];
                 }
 
@@ -94,7 +94,7 @@
 
                 if (data[@"lut1DSize"] != nil){
                     @throw [NSException exceptionWithName:@"NucodaCMSParserError"
-                                                   reason:@"1D Size parameter read already once."
+                                                   reason:@"1D Size parameter already read once."
                                                  userInfo:nil];
                 }
                 data[@"useLUT1D"] = [NSNumber numberWithBool:YES];
