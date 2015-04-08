@@ -386,13 +386,13 @@
     [string appendString:@" \n"];
 
     NSUInteger nucodaVersion = 0;
-    if ([options[@"fileTypeVariant"] isEqualToString:@"Nucoda v1"]) {
+    if ([options[@"fileTypeVariant"] isEqualToString:@"v1"]) {
         nucodaVersion = 1;
     }
-    else if ([options[@"fileTypeVariant"] isEqualToString:@"Nucoda v2"]) {
+    else if ([options[@"fileTypeVariant"] isEqualToString:@"v2"]) {
         nucodaVersion = 2;
     }
-    else if ([options[@"fileTypeVariant"] isEqualToString:@"Nucoda v3"]) {
+    else if ([options[@"fileTypeVariant"] isEqualToString:@"v3"]) {
         nucodaVersion = 3;
     }
 
