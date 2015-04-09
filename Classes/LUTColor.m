@@ -130,7 +130,7 @@
 
 - (LUTColor *)colorByInvertingColorWithMinimumValue:(double)minimumValue
                                        maximumValue:(double)maximumValue{
-    double distance = abs(maximumValue-minimumValue);
+    double distance = fabs(maximumValue-minimumValue);
     return [LUTColor colorWithRed:distance - self.red green:distance - self.green blue:distance - self.blue];
 }
 
