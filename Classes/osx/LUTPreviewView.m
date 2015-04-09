@@ -142,10 +142,8 @@
     _useImageEmbeddedColorspace = useImageEmbeddedColorspace;
 
     if (oldUseImageEmbeddedColorspace != self.useImageEmbeddedColorspace) {
-        dispatch_async(dispatch_get_current_queue(), ^{
-            [self updateImageViews];
-            [self updateFilters];
-        });
+        [self updateImageViews];
+        [self updateFilters];
     }
 
 }
@@ -156,10 +154,8 @@
     if (_previewImage) {
         self.videoURL = nil;
     }
-    dispatch_async(dispatch_get_current_queue(), ^{
-        [self updateImageViews];
-        [self setupPlaybackLayers];
-    });
+    [self updateImageViews];
+    [self setupPlaybackLayers];
 }
 
 - (void)setVideoURL:(NSURL *)videoURL {
