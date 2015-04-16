@@ -445,6 +445,18 @@
     return newLUT;
 }
 
+- (LUT *)LUTByLerpingToLUT:(LUT *)otherLUT
+                lerpAmount:(double)lerpAmount{
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
+}
+
+- (instancetype)LUTByMixingWithLUT:(LUT *)otherLUT
+                         mixAmount:(double)mixAmount{
+    SUBCLASS_MUST_OVERRIDE;
+    return nil;
+}
+
 - (LUTColor *)identityColorAtR:(double)redPoint g:(double)greenPoint b:(double)bluePoint{
     double red = remap(redPoint, 0, [self size] - 1, [self inputLowerBound], [self inputUpperBound]);
     double green = remap(greenPoint, 0, [self size] - 1, [self inputLowerBound], [self inputUpperBound]);

@@ -194,6 +194,12 @@ typedef NS_ENUM(NSInteger, LUTImageRenderPath) {
 
 - (instancetype)LUTByInvertingColor;
 
+- (LUT *)LUTByLerpingToLUT:(LUT *)otherLUT
+                lerpAmount:(double)lerpAmount;
+
+- (LUT *)LUTByMixingWithLUT:(LUT *)otherLUT
+                  mixAmount:(double)mixAmount;
+
 - (bool)equalsIdentityLUT;
 
 - (bool)equalsLUT:(LUT *)comparisonLUT;

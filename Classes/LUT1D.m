@@ -182,6 +182,60 @@
     return combinedLUT;
 }
 
+- (LUT *)LUTByLerpingToLUT:(LUT *)otherLUT
+                lerpAmount:(double)lerpAmount{
+    LUT *newLUT;
+    double usedInputLowerBound = MIN(self.inputLowerBound, otherLUT.inputLowerBound);
+    double usedInputUpperBound = MAX(self.inputUpperBound, otherLUT.inputUpperBound);
+    if(isLUT1D(otherLUT)){
+        newLUT = [LUT1D LUTOfSize:MIN(MAX(otherLUT.size, self.size), COCOALUT_SUGGESTED_MAX_LUT1D_SIZE) inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
+    }
+    else{
+        double usedInputLowerBound = MAX(self.inputLowerBound, otherLUT.inputLowerBound);
+        double usedInputUpperBound = MIN(self.inputUpperBound, otherLUT.inputUpperBound);
+        newLUT = [LUT3D LUTOfSize:MIN(MAX(otherLUT.size, self.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE) inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
+    }
+    [newLUT copyMetaPropertiesFromLUT:self];
+
+    [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+        LUTColor *startColor = [self colorAtColor:[newLUT identityColorAtR:r g:g b:b]];
+        LUTColor *lerpLUTColor = [otherLUT colorAtColor:[self identityColorAtR:r g:g b:b]];
+
+        LUTColor *lerpedColor = [startColor lerpTo:lerpLUTColor amount:lerpAmount];
+
+        [newLUT setColor:lerpedColor r:r g:g b:b];
+    }];
+
+    return newLUT;
+}
+
+- (LUT *)LUTByMixingWithLUT:(LUT *)otherLUT
+                  mixAmount:(double)mixAmount{
+    LUT *newLUT;
+    double usedInputLowerBound = MIN(self.inputLowerBound, otherLUT.inputLowerBound);
+    double usedInputUpperBound = MAX(self.inputUpperBound, otherLUT.inputUpperBound);
+    if(isLUT1D(otherLUT)){
+        newLUT = [LUT1D LUTOfSize:MIN(MAX(otherLUT.size, self.size), COCOALUT_SUGGESTED_MAX_LUT1D_SIZE) inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
+    }
+    else{
+        double usedInputLowerBound = MAX(self.inputLowerBound, otherLUT.inputLowerBound);
+        double usedInputUpperBound = MIN(self.inputUpperBound, otherLUT.inputUpperBound);
+        newLUT = [LUT3D LUTOfSize:MIN(MAX(otherLUT.size, self.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE) inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
+    }
+    [newLUT copyMetaPropertiesFromLUT:self];
+
+    [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+        LUTColor *startColor = [self colorAtColor:[newLUT identityColorAtR:r g:g b:b]];
+        LUTColor *mixLUTColor = [otherLUT colorAtColor:startColor];
+
+        LUTColor *lerpedColor = [startColor lerpTo:mixLUTColor amount:mixAmount];
+
+        [newLUT setColor:lerpedColor r:r g:g b:b];
+    }];
+    
+    return newLUT;
+}
+
 - (NSArray *)rgbCurveArray{
     return @[[self.redCurve mutableCopy], [self.greenCurve mutableCopy], [self.blueCurve mutableCopy]];
 }

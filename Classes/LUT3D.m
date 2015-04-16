@@ -208,6 +208,48 @@
     return newLUT;
 }
 
+- (LUT *)LUTByLerpingToLUT:(LUT *)otherLUT
+                lerpAmount:(double)lerpAmount{
+    NSUInteger outputSize = MAX(clampUpperBound(MAX(self.size, otherLUT.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE), self.size);
+    double usedInputLowerBound = MAX(self.inputLowerBound, otherLUT.inputLowerBound);
+    double usedInputUpperBound = MIN(self.inputUpperBound, otherLUT.inputUpperBound);
+
+    LUT3D *newLUT = [LUT3D LUTOfSize:outputSize inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
+    [newLUT copyMetaPropertiesFromLUT:self];
+
+    [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+        LUTColor *startColor = [self colorAtColor:[newLUT identityColorAtR:r g:g b:b]];
+        LUTColor *lerpLUTColor = [otherLUT colorAtColor:[self identityColorAtR:r g:g b:b]];
+
+        LUTColor *lerpedColor = [startColor lerpTo:lerpLUTColor amount:lerpAmount];
+
+        [newLUT setColor:lerpedColor r:r g:g b:b];
+    }];
+
+    return newLUT;
+}
+
+- (LUT *)LUTByMixingWithLUT:(LUT *)otherLUT
+                  mixAmount:(double)mixAmount{
+    NSUInteger outputSize = MAX(clampUpperBound(MAX(self.size, otherLUT.size), COCOALUT_SUGGESTED_MAX_LUT3D_SIZE), self.size);
+    double usedInputLowerBound = MAX(self.inputLowerBound, otherLUT.inputLowerBound);
+    double usedInputUpperBound = MIN(self.inputUpperBound, otherLUT.inputUpperBound);
+
+    LUT3D *newLUT = [LUT3D LUTOfSize:outputSize inputLowerBound:usedInputLowerBound inputUpperBound:usedInputUpperBound];
+    [newLUT copyMetaPropertiesFromLUT:self];
+
+    [newLUT LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
+        LUTColor *startColor = [self colorAtColor:[newLUT identityColorAtR:r g:g b:b]];
+        LUTColor *mixLUTColor = [otherLUT colorAtColor:startColor];
+
+        LUTColor *lerpedColor = [startColor lerpTo:mixLUTColor amount:mixAmount];
+
+        [newLUT setColor:lerpedColor r:r g:g b:b];
+    }];
+    
+    return newLUT;
+}
+
 - (instancetype)LUT3DByExtractingColorShiftContrastReferredWithReverseStrictnessType:(LUT1DReverseStrictnessType)strictnessType{
     LUT1D *selfLUT1D = [self LUT1D];
 
