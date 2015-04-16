@@ -11,7 +11,7 @@
 @implementation LUTFormatterICCProfile
 
 + (void)load{
-    [super load];
+    //[super load];
 }
 
 + (LUT *)LUTFromData:(NSData *)data{
