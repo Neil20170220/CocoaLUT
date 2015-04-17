@@ -77,13 +77,13 @@
     LUT3D *lut3D = [LUT3D LUTIdentityOfSize:33 inputLowerBound:0.0 inputUpperBound:1.0];
 
 
-    //apply in order: Saturation -> Printer Lights -> Tonemap -> SOP
+    //apply in order: Printer Lights -> Tonemap -> Saturation -> SOP
     [lut3D LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
         LUTColor *color = [lut3D colorAtR:r g:g b:b];
         //  AlexaWideGamut Luma from NPM: 0.291948669899 R + 0.823830265984 G + -0.115778935883 B
-        color = [color colorByChangingSaturation:saturation usingLumaR:0.291948669899 lumaG:0.823830265984 lumaB:-0.115778935883];
         color = [color colorByAddingColor:printerLight];
         color = [toneMapLUT colorAtColor:color];
+        color = [color colorByChangingSaturation:saturation usingLumaR:0.291948669899 lumaG:0.823830265984 lumaB:-0.115778935883];
         color = [color colorByApplyingRedSlope:redSlope
                                      redOffset:redOffset
                                       redPower:redPower
@@ -98,8 +98,8 @@
     }];
 
     lut3D.passthroughFileOptions = @{[self formatterID]:@{@"fileTypeVariant":@"Arri",
-                                                          @"mixCurvesMethod":@(LUT1DSwizzleChannelsMethodAverageRGB),
-                                                          @"lutSize":@4096}};
+                                                          @"mixCurvesMethod":@(LUT1DSwizzleChannelsMethodAverageRGB)
+                                                          }};
 
     return lut3D;
 }
@@ -125,6 +125,10 @@
 
 + (LUTFormatterOutputType)outputType{
     return LUTFormatterOutputType1D;
+}
+
++ (BOOL)isDestructiveWithOptions:(NSDictionary *)options{
+    return YES;
 }
 
 + (BOOL)isValidReaderForURL:(NSURL *)fileURL{
