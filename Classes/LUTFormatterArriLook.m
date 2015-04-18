@@ -165,8 +165,7 @@
         [lut3D setColor:color r:r g:g b:b];
     }];
 
-    lut3D.passthroughFileOptions = @{[self formatterID]:@{@"fileTypeVariant":@"Arri",
-                                                          @"mixCurvesMethod":@(LUT1DSwizzleChannelsMethodAverageRGB)
+    lut3D.passthroughFileOptions = @{[self formatterID]:@{@"fileTypeVariant":@"Arri"
                                                           }};
 
     return lut3D;
