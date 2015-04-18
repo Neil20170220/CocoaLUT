@@ -23,54 +23,105 @@
     if(![[xml attributes][@"version"] isEqualToString:@"1.0"]){
         @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Arri Look Version not 1.0" userInfo:nil];
     }
-
-    NSArray *toneMapLines = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([[xml valueForKeyPath:@"ToneMapLut"] innerText]);
-
-    NSMutableArray *curve1D = [NSMutableArray array];
-
-    for (NSString *line in toneMapLines){
-        if([line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].count > 1){
-           @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Tone Map Value invalid" userInfo:nil];
+    
+    LUT1D *toneMapLUT;
+    if ([xml valueForKeyPath:@"ToneMapLut"]) {
+        NSArray *toneMapLines = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([[xml valueForKeyPath:@"ToneMapLut"] innerText]);
+        
+        NSMutableArray *curve1D = [NSMutableArray array];
+        
+        for (NSString *line in toneMapLines){
+            if([line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].count > 1){
+                @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Tone Map Value invalid" userInfo:nil];
+            }
+            
+            if(stringIsValidNumber(line) == NO){
+                @throw [NSException exceptionWithName:@"ArriLookParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", line] userInfo:nil];
+            }
+            
+            [curve1D addObject:@((double)[line integerValue]/4095.0)];
         }
-
-        if(stringIsValidNumber(line) == NO){
-            @throw [NSException exceptionWithName:@"ArriLookParserError" reason:[NSString stringWithFormat:@"NaN detected in LUT: \"%@\"", line] userInfo:nil];
+        
+        if(curve1D.count !=  [[xml valueForKeyPath:@"ToneMapLut._rows"] integerValue]){
+            @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Number of tonemap lines != rows value!" userInfo:nil];
         }
-
-        [curve1D addObject:@((double)[line integerValue]/4095.0)];
+        
+        toneMapLUT = [LUT1D LUT1DWith1DCurve:curve1D lowerBound:0.0 upperBound:1.0];
+    }
+    else{
+        toneMapLUT = [self k1s1ToneMap];
     }
 
-    if(curve1D.count !=  [[xml valueForKeyPath:@"ToneMapLut._rows"] integerValue]){
-        @throw [NSException exceptionWithName:@"ArriLookParserError" reason:@"Number of tonemap lines != rows value!" userInfo:nil];
+    
+
+
+
+    double saturation;
+    if (![xml valueForKeyPath:@"Saturation"]) {
+        saturation = 1.0;
     }
-
-
-
-    LUT1D *toneMapLUT = [LUT1D LUT1DWith1DCurve:curve1D lowerBound:0.0 upperBound:1.0];
-
-    double saturation = [[xml valueForKeyPath:@"Saturation"] doubleValue];
+    else{
+        saturation = [[xml valueForKeyPath:@"Saturation"] doubleValue];
+    }
+    
 
     //NSLog(@"saturation %f", saturation);
-
-    NSArray *printerLightSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"PrinterLight"]);
-    LUTColor *printerLight = [LUTColor colorWithRed:[printerLightSplitLine[0] doubleValue] green:[printerLightSplitLine[1] doubleValue] blue:[printerLightSplitLine[2] doubleValue]];
+    LUTColor *printerLight;
+    if (![xml valueForKeyPath:@"PrinterLight"]) {
+        printerLight = [LUTColor colorWithZeroes];
+    }
+    else{
+        NSArray *printerLightSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"PrinterLight"]);
+        printerLight = [LUTColor colorWithRed:[printerLightSplitLine[0] doubleValue] green:[printerLightSplitLine[1] doubleValue] blue:[printerLightSplitLine[2] doubleValue]];
+    }
+    
 
     //NSLog(@"PrinterLight %@", printerLight);
+    double redSlope;
+    double greenSlope;
+    double blueSlope;
+    
 
-    NSArray *slopeSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"SOPNode.Slope"]);
-    double redSlope = [slopeSplitLine[0] doubleValue];
-    double greenSlope = [slopeSplitLine[1] doubleValue];
-    double blueSlope = [slopeSplitLine[2] doubleValue];
+    double redOffset;
+    double greenOffset;
+    double blueOffset;
+    
 
-    NSArray *offsetSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"SOPNode.Offset"]);
-    double redOffset = [offsetSplitLine[0] doubleValue];
-    double greenOffset = [offsetSplitLine[1] doubleValue];
-    double blueOffset = [offsetSplitLine[2] doubleValue];
+    double redPower;
+    double greenPower;
+    double bluePower;
+    
+    if (![xml valueForKeyPath:@"SOPNode"]) {
+        redSlope = 1;
+        greenSlope = 1;
+        blueSlope = 1;
+        
+        redOffset = 0;
+        greenOffset = 0;
+        blueOffset = 0;
+        
+        redPower = 1;
+        greenPower = 1;
+        bluePower = 1;
+    }
+    else{
+        NSArray *slopeSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"SOPNode.Slope"]);
+        redSlope = [slopeSplitLine[0] doubleValue];
+        greenSlope = [slopeSplitLine[1] doubleValue];
+        blueSlope = [slopeSplitLine[2] doubleValue];
+        
+        NSArray *offsetSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"SOPNode.Offset"]);
+        redOffset = [offsetSplitLine[0] doubleValue];
+        greenOffset = [offsetSplitLine[1] doubleValue];
+        blueOffset = [offsetSplitLine[2] doubleValue];
+        
+        NSArray *powerSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"SOPNode.Power"]);
+        redPower = [powerSplitLine[0] doubleValue];
+        greenPower = [powerSplitLine[1] doubleValue];
+        bluePower = [powerSplitLine[2] doubleValue];
+    }
 
-    NSArray *powerSplitLine = arrayWithComponentsSeperatedByNewlineAndWhitespaceWithEmptyElementsRemoved([xml valueForKeyPath:@"SOPNode.Power"]);
-    double redPower = [powerSplitLine[0] doubleValue];
-    double greenPower = [powerSplitLine[1] doubleValue];
-    double bluePower = [powerSplitLine[2] doubleValue];
+    
 
     //NSLog(@"slope %@\noffset %@\npower %@", slopeSplitLine, offsetSplitLine, powerSplitLine);
 
@@ -218,6 +269,31 @@
 
 + (NSArray *)fileExtensions{
     return @[@"xml"];
+}
+
++ (NSBundle *)transferFunctionsLUTResourceBundle{
+    static NSBundle *transferFunctionsBundle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        transferFunctionsBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ManufacturerLUTs" withExtension:@"bundle"]];
+    });
+    
+    return transferFunctionsBundle;
+}
+
++ (NSURL *)lutFromBundleWithName:(NSString *)name extension:(NSString *)extension{
+    return [[self.class transferFunctionsLUTResourceBundle] URLForResource:name withExtension:extension];
+}
+
++ (LUT1D *)k1s1ToneMap{
+    static LUT1D *k1s1 = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSURL *lutURL = [self lutFromBundleWithName:@"AlexaV3_K1S1_LogC2Video_TonemapOnly_EE_cube1d_4096" extension:@"cube"];
+        k1s1 = (LUT1D *)[LUT LUTFromURL:lutURL error:nil];
+    });
+    
+    return k1s1;
 }
 
 @end

@@ -7,7 +7,8 @@ Pod::Spec.new do |s|
   s.author       = { "Wil Gieseler" => "wil@wilgieseler.com", "Greg Cotten" => "greg@gregcotten.com"}
   s.source       = { :git => "https://github.com/videovillage/CocoaLUT.git", :tag => s.version }
 
-  s.resource_bundle = {'TransferFunctionLUTs' => 'Assets/TransferFunctionLUTs/*.cube'}
+  s.resource_bundle = {'TransferFunctionLUTs' => 'Assets/TransferFunctionLUTs/*.cube',
+                       'ManufacturerLUTs' => 'Assets/ManufacturerLUTs/*.cube'}
 
   s.requires_arc = true
   s.source_files = 'Classes/**/*'
