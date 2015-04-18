@@ -128,11 +128,12 @@
     LUT3D *lut3D = [LUT3D LUTIdentityOfSize:64 inputLowerBound:0.0 inputUpperBound:1.0];
 
 
-    //apply in order: Printer Lights -> Tonemap -> g24_to_linear -> Alexa tonemap color matrix -> Saturation -> linear_to_g24 ->  SOP
+    //apply in order: Printer Lights -> Tonemap -> g24_to_linear -> Alexa tonemap color matrix -> Saturation -> linear_to_g24 -> clamp01 -> SOP -> clamp01
     [lut3D LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
         LUTColor *color = [lut3D colorAtR:r g:g b:b];
         //  AlexaWideGamut Luma from NPM: 0.291948669899 R + 0.823830265984 G + -0.115778935883 B
         color = [color colorByAddingColor:printerLight];
+        
         color = [toneMapLUT colorAtColor:color];
         color = [LUTColor colorWithRed:pow(color.red, 2.4) green:pow(color.green, 2.4) blue:pow(color.blue, 2.4)];
         color = [color colorByApplyingColorMatrixColumnMajorM00:1.485007
@@ -145,7 +146,9 @@
                                                             m21:-0.249155
                                                             m22:1.111242];
         color = [color colorByChangingSaturation:saturation usingLumaR:0.2126 lumaG:0.7152 lumaB:0.0722];
+        
         color = [LUTColor colorWithRed:pow(color.red, 1.0/2.4) green:pow(color.green, 1.0/2.4) blue:pow(color.blue, 1.0/2.4)];
+        color = [color clamped01];
         
         color = [color colorByApplyingRedSlope:redSlope
                                      redOffset:redOffset
