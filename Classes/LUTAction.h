@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CocoaLUT.h"
 #import "LUTColorSpace.h"
+#import <M13OrderedDictionary/M13OrderedDictionary.h>
 
 @interface LUTAction : NSObject <NSCopying>
 
