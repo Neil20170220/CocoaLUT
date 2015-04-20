@@ -128,7 +128,7 @@
     LUT3D *lut3D = [LUT3D LUTIdentityOfSize:64 inputLowerBound:0.0 inputUpperBound:1.0];
 
 
-    //apply in order: Printer Lights -> Tonemap -> g24_to_linear -> Alexa tonemap color matrix -> Saturation -> linear_to_g24 -> clamp01 -> SOP -> clamp01
+    //apply in order: Printer Lights -> Tonemap -> g24_to_linear -> Alexa tonemap color matrix -> Saturation w/ destination coefficients -> linear_to_g24 -> clamp01 -> CDL -> clamp01
     [lut3D LUTLoopWithBlock:^(size_t r, size_t g, size_t b) {
         LUTColor *color = [lut3D colorAtR:r g:g b:b];
         //  AlexaWideGamut Luma from NPM: 0.291948669899 R + 0.823830265984 G + -0.115778935883 B
