@@ -131,6 +131,7 @@
         return [self.class sceneForLUT:lut];
     }
     else{
+        self.lut = lut3D;
         for(LUTColorNode *node in self.dotGroup.childNodes){
             LUTColor *transformedColor = [lut3D colorAtR:node.r g:node.g b:node.b];
             node.transformedColor = transformedColor;
