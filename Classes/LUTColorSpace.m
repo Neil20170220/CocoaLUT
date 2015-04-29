@@ -353,36 +353,39 @@ forwardFootlambertCompensation:(double)flCompensation
                                                name:@"REDcolor"];
 }
 
+// REDcolor2-4 and DRAGONcolor1-2 are provided with calculations by Tashi Trieu and Thomas Mansencal
+// http://colour-science.org/blog_red_colourspaces_derivation.php
+
 + (instancetype)redColor2ColorSpace{
     return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
-                                   redChromaticityX:0.858485322390
-                                   redChromaticityY:0.316594954144
-                                 greenChromaticityX:0.292084791425
-                                 greenChromaticityY:0.667838655872
-                                  blueChromaticityX:0.097651412967
-                                  blueChromaticityY:-0.026565653796
+                                   redChromaticityX:0.878682510476
+                                   redChromaticityY:0.32496400741
+                                 greenChromaticityX:0.300888714367
+                                 greenChromaticityY:0.679054755791
+                                  blueChromaticityX:0.0953986946056
+                                  blueChromaticityY:-0.0293793268343
                                                name:@"REDcolor2"];
 }
 
 + (instancetype)redColor3ColorSpace{
     return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
-                                   redChromaticityX:0.682450885401
-                                   redChromaticityY:0.320302618634
-                                 greenChromaticityX:0.291813306036
-                                 greenChromaticityY:0.672642663443
-                                  blueChromaticityX:0.109533374066
-                                  blueChromaticityY:-0.006916855752
+                                   redChromaticityX:0.701181035906
+                                   redChromaticityY:0.329014155583
+                                 greenChromaticityX:0.300600304652
+                                 greenChromaticityY:0.683788834269
+                                  blueChromaticityX:0.108154455624
+                                  blueChromaticityY:-0.00868817578666
                                                name:@"REDcolor3"];
 }
 
 + (instancetype)redColor4ColorSpace{
     return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
-                                   redChromaticityX:0.682432347
-                                   redChromaticityY:0.320314427
-                                 greenChromaticityX:0.291815909
-                                 greenChromaticityY:0.672638769
-                                  blueChromaticityX:0.144290202
-                                  blueChromaticityY:0.050547336
+                                   redChromaticityX:0.701180591892
+                                   redChromaticityY:0.329013699116
+                                 greenChromaticityX:0.300600395529
+                                 greenChromaticityY:0.683788824257
+                                  blueChromaticityX:0.145331946229
+                                  blueChromaticityY:0.0516168036226
                                                name:@"REDcolor4"];
 }
 
@@ -399,12 +402,12 @@ forwardFootlambertCompensation:(double)flCompensation
 
 + (instancetype)dragonColor2ColorSpace{
     return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
-                                   redChromaticityX:0.733671536367
-                                   redChromaticityY:0.319227712042
-                                 greenChromaticityX:0.290804815281
-                                 greenChromaticityY:0.689668775507
-                                  blueChromaticityX:0.143989704285
-                                  blueChromaticityY:0.050047743857
+                                   redChromaticityX:0.753044222785
+                                   redChromaticityY:0.327830576682
+                                 greenChromaticityX:0.299570228481
+                                 greenChromaticityY:0.700699321956
+                                  blueChromaticityX:0.079642066735
+                                  blueChromaticityY:-0.0549379510888
                                                name:@"DRAGONcolor2"];
 }
 
