@@ -391,23 +391,23 @@ forwardFootlambertCompensation:(double)flCompensation
 
 + (instancetype)dragonColorColorSpace{
     return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
-                                   redChromaticityX:0.733696621349
-                                   redChromaticityY:0.319213119879
-                                 greenChromaticityX:0.290807268864
-                                 greenChromaticityY:0.689667987865
-                                  blueChromaticityX:0.083009416684
-                                  blueChromaticityY:-0.050780628080
-                                               name:@"DRAGONcolor"];
-}
-
-+ (instancetype)dragonColor2ColorSpace{
-    return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
                                    redChromaticityX:0.753044222785
                                    redChromaticityY:0.327830576682
                                  greenChromaticityX:0.299570228481
                                  greenChromaticityY:0.700699321956
                                   blueChromaticityX:0.079642066735
                                   blueChromaticityY:-0.0549379510888
+                                               name:@"DRAGONcolor"];
+}
+
++ (instancetype)dragonColor2ColorSpace{
+    return [self LUTColorSpaceWithDefaultWhitePoint:[LUTColorSpaceWhitePoint d65WhitePoint]
+                                   redChromaticityX:0.753044491143
+                                   redChromaticityY:0.327831029513
+                                 greenChromaticityX:0.299570490451
+                                 greenChromaticityY:0.700699415614
+                                  blueChromaticityX:0.145011584278
+                                  blueChromaticityY:0.0510971250879
                                                name:@"DRAGONcolor2"];
 }
 
