@@ -28,6 +28,9 @@
  */
 @property (strong, nonatomic) NSImage *previewImage;
 
+- (NSImage *)previewImageAtCurrentTime;
+- (NSImage *)lutPreviewImageAtCurrentTime;
+
 /**
  *  The current preview video URL. Setting this replaces the current image or video preview.
  */

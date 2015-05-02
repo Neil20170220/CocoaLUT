@@ -226,6 +226,49 @@
     return textField;
 }
 
+- (NSImage *)previewImageAtCurrentTime{
+    if (self.isVideo) {
+        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc]initWithAsset:self.videoPlayer.currentItem.asset];
+
+        imageGenerator.requestedTimeToleranceBefore = kCMTimeZero;
+        imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
+
+        NSError *error;
+        CGImageRef imageRef = [imageGenerator copyCGImageAtTime:self.videoPlayer.currentTime actualTime:NULL error:&error];
+
+        if (error) {
+            CGImageRelease(imageRef);
+            return nil;
+        }
+
+        NSMutableData *mutableData = [NSMutableData data];
+
+        CGImageDestinationRef dest = CGImageDestinationCreateWithData((CFMutableDataRef)mutableData, (CFStringRef)@"public.tiff", 1, NULL);
+
+        CGImageDestinationAddImage(dest,imageRef,NULL);
+        CGImageDestinationFinalize(dest);
+        CFRelease(dest);
+
+        CGImageRelease(imageRef);  // CGImageRef won't be released by ARC
+
+        return [[NSImage alloc] initWithData:mutableData];
+    }
+    else{
+        return self.previewImage.copy;
+    }
+}
+
+- (NSImage *)lutPreviewImageAtCurrentTime{
+    if (self.isVideo) {
+        return [self.lut processNSImage:self.previewImageAtCurrentTime
+             preserveEmbeddedColorSpace:self.useImageEmbeddedColorspace
+                             renderPath:LUTImageRenderPathCoreImage];
+    }
+    else{
+        return ((NSImage *)self.lutImageLayer.contents).copy;
+    }
+}
+
 - (void)initialize {
 
     // Video Player
