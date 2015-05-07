@@ -36,9 +36,8 @@ struct LUTFormatterFSIDAT_FileHeader{
     LUT3D *lut;
 
     if (fileHeader.ver < 0x02000000) {
-        unsigned int lutBytes[64*64*64];
-
-        [data getBytes:lutBytes range:NSMakeRange(128, sizeof(lutBytes))];
+        NSData *lutData = [data subdataWithRange:NSMakeRange(128, 64*64*64*4)];
+        unsigned int *lutBytes = (unsigned int *)lutData.bytes;
 
         lut = [LUT3D LUTOfSize:64 inputLowerBound:0 inputUpperBound:1];
 
@@ -63,9 +62,8 @@ struct LUTFormatterFSIDAT_FileHeader{
                                                              @"lutSize": @(64)}};
     }
     else if (fileHeader.ver == 0x02000000) {
-        unsigned int lutBytes[17*17*17];
-
-        [data getBytes:lutBytes range:NSMakeRange(128, sizeof(lutBytes))];
+        NSData *lutData = [data subdataWithRange:NSMakeRange(128, 17*17*17*4)];
+        unsigned int *lutBytes = (unsigned int *)lutData.bytes;
 
         lut = [LUT3D LUTOfSize:17 inputLowerBound:0 inputUpperBound:1];
 
