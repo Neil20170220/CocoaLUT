@@ -268,7 +268,9 @@
     NSDictionary *legacyOptions =
     @{@"fileTypeVariant":@"Legacy",
       @"integerMaxOutput": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"12-bit": @(maxIntegerFromBitdepth(12))}]),
-      @"lutSize": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"17": @(17)}])};
+      @"lutSize": M13OrderedDictionaryFromOrderedArrayWithDictionaries(@[@{@"17": @(17)},
+                                                                         @{@"33": @(33)},
+                                                                         @{@"65": @(65)}])};
 
     return @[lustreOptions, nukeOptions, legacyOptions];
 }
