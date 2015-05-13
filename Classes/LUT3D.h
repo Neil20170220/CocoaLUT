@@ -47,6 +47,8 @@ typedef NS_ENUM(NSInteger, LUTMonoConversionMethod) {
                                                      m22:(double)m22;
 - (LUT1D *)LUT1D;
 
+- (BOOL)is1DLUT;
+
 - (NSMutableArray *)latticeArrayCopy;
 
 

@@ -439,6 +439,11 @@
     return [[self latticeArray] mutableCopy];
 }
 
+- (BOOL)is1DLUT{
+    //resize down to speed up check - shouldn't affect accuracy
+    return [[self LUTByResizingToSize:MIN(self.size, 17)] equalsLUT:[[self LUT1D] LUT3DOfSize:MIN(self.size, 17)]];
+}
+
 - (bool)equalsLUT:(LUT *)comparisonLUT{
     if(isLUT1D(comparisonLUT)){
         return NO;
