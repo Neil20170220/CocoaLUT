@@ -277,7 +277,7 @@
     static NSBundle *transferFunctionsBundle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        transferFunctionsBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ManufacturerLUTs" withExtension:@"bundle"]];
+        transferFunctionsBundle = [NSBundle bundleWithURL:[[NSBundle bundleForClass:self.class] URLForResource:@"ManufacturerLUTs" withExtension:@"bundle"]];
     });
     
     return transferFunctionsBundle;
