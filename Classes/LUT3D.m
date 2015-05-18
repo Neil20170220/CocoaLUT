@@ -534,65 +534,69 @@
     
     double QTDotB[8];
     
-    if (deltaX >= deltaY && deltaY >= deltaZ) {
-        QTDotB[0] = 1.0 - deltaX;
-        QTDotB[1] = 0;
-        QTDotB[2] = 0;
-        QTDotB[3] = 0;
-        QTDotB[4] = deltaX - deltaY;
-        QTDotB[5] = 0;
-        QTDotB[6] = deltaY - deltaZ;
-        QTDotB[7] = deltaZ;
-    }
-    else if (deltaX >= deltaZ && deltaZ >= deltaY){
-        QTDotB[0] = 1.0 - deltaX;
-        QTDotB[1] = 0;
-        QTDotB[2] = 0;
-        QTDotB[3] = 0;
-        QTDotB[4] = deltaX - deltaZ;
-        QTDotB[5] = deltaZ - deltaY;
-        QTDotB[6] = 0;
-        QTDotB[7] = deltaY;
-    }
-    else if (deltaZ >= deltaX && deltaX >= deltaY){
-        QTDotB[0] = 1.0 - deltaZ;
-        QTDotB[1] = deltaZ - deltaX;
-        QTDotB[2] = 0;
-        QTDotB[3] = 0;
-        QTDotB[4] = 0;
-        QTDotB[5] = deltaX - deltaY;
-        QTDotB[6] = 0;
-        QTDotB[7] = deltaY;
-    }
-    else if (deltaY >= deltaX && deltaX >= deltaZ){
-        QTDotB[0] = 1.0 - deltaY;
-        QTDotB[1] = 0;
-        QTDotB[2] = deltaY - deltaX;
-        QTDotB[3] = 0;
-        QTDotB[4] = 0;
-        QTDotB[5] = 0;
-        QTDotB[6] = deltaX - deltaZ;
-        QTDotB[7] = deltaZ;
-    }
-    else if (deltaY >= deltaZ && deltaZ >= deltaX){
-        QTDotB[0] = 1.0 - deltaY;
-        QTDotB[1] = 0;
-        QTDotB[2] = deltaY - deltaZ;
-        QTDotB[3] = deltaZ - deltaX;
-        QTDotB[4] = 0;
-        QTDotB[5] = 0;
-        QTDotB[6] = 0;
-        QTDotB[7] = deltaX;
+    if (deltaX > deltaY) {
+        if (deltaY > deltaZ) {
+            QTDotB[0] = 1.0 - deltaX;
+            QTDotB[1] = 0;
+            QTDotB[2] = 0;
+            QTDotB[3] = 0;
+            QTDotB[4] = deltaX - deltaY;
+            QTDotB[5] = 0;
+            QTDotB[6] = deltaY - deltaZ;
+            QTDotB[7] = deltaZ;
+        }
+        else if (deltaX > deltaZ){
+            QTDotB[0] = 1.0 - deltaX;
+            QTDotB[1] = 0;
+            QTDotB[2] = 0;
+            QTDotB[3] = 0;
+            QTDotB[4] = deltaX - deltaZ;
+            QTDotB[5] = deltaZ - deltaY;
+            QTDotB[6] = 0;
+            QTDotB[7] = deltaY;
+        }
+        else{
+            QTDotB[0] = 1.0 - deltaZ;
+            QTDotB[1] = deltaZ - deltaX;
+            QTDotB[2] = 0;
+            QTDotB[3] = 0;
+            QTDotB[4] = 0;
+            QTDotB[5] = deltaX - deltaY;
+            QTDotB[6] = 0;
+            QTDotB[7] = deltaY;
+        }
     }
     else{
-        QTDotB[0] = 1.0 - deltaZ;
-        QTDotB[1] = deltaZ - deltaY;
-        QTDotB[2] = 0;
-        QTDotB[3] = deltaY - deltaX;
-        QTDotB[4] = 0;
-        QTDotB[5] = 0;
-        QTDotB[6] = 0;
-        QTDotB[7] = deltaX;
+        if (deltaZ > deltaY) {
+            QTDotB[0] = 1.0 - deltaZ;
+            QTDotB[1] = deltaZ - deltaY;
+            QTDotB[2] = 0;
+            QTDotB[3] = deltaY - deltaX;
+            QTDotB[4] = 0;
+            QTDotB[5] = 0;
+            QTDotB[6] = 0;
+            QTDotB[7] = deltaX;
+        }
+        else if(deltaZ > deltaX){
+            QTDotB[0] = 1.0 - deltaY;
+            QTDotB[1] = 0;
+            QTDotB[2] = deltaY - deltaZ;
+            QTDotB[3] = deltaZ - deltaX;
+            QTDotB[4] = 0;
+            QTDotB[5] = 0;
+            QTDotB[6] = 0;
+            QTDotB[7] = deltaX;
+        }
+        else{
+            QTDotB[0] = 1.0 - deltaY;
+            QTDotB[1] = 0;
+            QTDotB[2] = deltaY - deltaX;
+            QTDotB[3] = 0;
+            QTDotB[4] = 0;
+            QTDotB[5] = 0;
+            QTDotB[6] = deltaX - deltaZ;
+            QTDotB[7] = deltaZ;
+        }
     }
     
     double red = QTDotB[0]*P000.red + QTDotB[1]*P001.red + QTDotB[2]*P010.red + QTDotB[3]*P011.red + QTDotB[4]*P100.red + QTDotB[5]*P101.red + QTDotB[6]*P110.red + QTDotB[7]*P111.red;
