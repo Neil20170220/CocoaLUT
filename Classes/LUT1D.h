@@ -24,7 +24,7 @@
 @interface LUT1D : LUT
 
 
-
+@property (assign) BOOL allowsExtrapolation;
 
 /**
  *  Initializes and returns a 1D LUT with the specified channel curves.

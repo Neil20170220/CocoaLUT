@@ -28,6 +28,7 @@
         self.redCurve = [NSMutableArray array];
         self.greenCurve = [NSMutableArray array];
         self.blueCurve = [NSMutableArray array];
+        self.allowsExtrapolation = [aDecoder decodeBoolForKey:@"allowsExtrapolation"];
         
         NSData *redData = [aDecoder decodeObjectForKey:@"redCurveData"];
         NSData *greenData = [aDecoder decodeObjectForKey:@"greenCurveData"];
@@ -60,6 +61,8 @@
     [aCoder encodeObject:[NSData dataWithBytesNoCopy:redData length:sizeof(double)*self.size] forKey:@"redCurveData"];
     [aCoder encodeObject:[NSData dataWithBytesNoCopy:greenData length:sizeof(double)*self.size] forKey:@"greenCurveData"];
     [aCoder encodeObject:[NSData dataWithBytesNoCopy:blueData length:sizeof(double)*self.size] forKey:@"blueCurveData"];
+
+    [aCoder encodeBool:self.allowsExtrapolation forKey:@"allowsExtrapolation"];
 }
 
 + (instancetype)LUT1DWithRedCurve:(NSMutableArray *)redCurve
@@ -133,6 +136,7 @@
         self.redCurve = redCurve;
         self.greenCurve = greenCurve;
         self.blueCurve = blueCurve;
+        self.allowsExtrapolation = NO;
         if(redCurve.count != greenCurve.count || redCurve.count != blueCurve.count){
             @throw [NSException exceptionWithName:@"LUT1DCreationError" reason:[NSString stringWithFormat:@"Curves must be the same length. R:%d G:%d B:%d", (int)redCurve.count, (int)greenCurve.count, (int)blueCurve.count] userInfo:nil];
         }
@@ -148,6 +152,7 @@
     for(int i = 0; i < size; i++){
         [blankCurve addObject:[NSNull null]];
     }
+
     return [LUT1D LUT1DWith1DCurve:blankCurve lowerBound:inputLowerBound upperBound:inputUpperBound];
 }
 
@@ -271,14 +276,19 @@
 }
 
 - (LUTColor *)colorAtColor:(LUTColor *)color{
-    //no fear of extrapolating
-    double redRemappedInterpolatedIndex = remapNoError(color.red, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
-    double greenRemappedInterpolatedIndex = remapNoError(color.green, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
-    double blueRemappedInterpolatedIndex = remapNoError(color.blue, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+    if (self.allowsExtrapolation) {
+        //no fear of extrapolating
+        double redRemappedInterpolatedIndex = remapNoError(color.red, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+        double greenRemappedInterpolatedIndex = remapNoError(color.green, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
+        double blueRemappedInterpolatedIndex = remapNoError(color.blue, [self inputLowerBound], [self inputUpperBound], 0, [self size]-1);
 
-    return [self colorAtInterpolatedR:redRemappedInterpolatedIndex
-                                    g:greenRemappedInterpolatedIndex
-                                    b:blueRemappedInterpolatedIndex];
+        return [self colorAtInterpolatedR:redRemappedInterpolatedIndex
+                                        g:greenRemappedInterpolatedIndex
+                                        b:blueRemappedInterpolatedIndex];
+    }
+    else{
+        return [super colorAtColor:color];
+    }
 }
 
 - (LUTColor *)colorAtInterpolatedR:(double)redPoint
@@ -288,7 +298,14 @@
     if ((redPoint < 0   || redPoint     > self.size - 1) ||
         (greenPoint < 0 || greenPoint   > self.size - 1) ||
         (bluePoint < 0  || bluePoint    > self.size - 1)) {
-        return [self colorAtExtrapolatedR:redPoint g:greenPoint b:bluePoint];
+        if (self.allowsExtrapolation) {
+            return [self colorAtExtrapolatedR:redPoint g:greenPoint b:bluePoint];
+        }
+        else{
+            @throw [NSException exceptionWithName:@"InvalidInputs"
+                                           reason:[NSString stringWithFormat:@"Tried to access out-of-bounds lattice point r:%f g:%f b:%f", redPoint, greenPoint, bluePoint]
+                                         userInfo:nil];
+        }
     }
 
     //red
