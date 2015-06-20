@@ -877,7 +877,7 @@
 
 - (NSImage *)processNSImageDirectly:(NSImage *)image {
 
-    NSBitmapImageRep *inImageRep = [image representations][0];
+    NSBitmapImageRep *inImageRep = (NSBitmapImageRep *)[image representations][0];
 
 
     int nchannels = 3;
