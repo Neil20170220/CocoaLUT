@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FRCocoaLUT"
-  s.version      = begin; File.read('VERSION'); rescue; '9000.0.0'; end
+  s.version      = '0.2.28'
   s.summary      = "LUTs (1D and 3D color lookup tables) for Cocoa applications."
   s.homepage     = "https://github.com/Neil20170223/CocoaLUT"
   s.license      = 'MIT'
