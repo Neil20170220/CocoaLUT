@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FRCocoaLUT"
-  s.version      = '0.2.28'
+  s.version      = '0.2.29'
   s.summary      = "LUTs (1D and 3D color lookup tables) for Cocoa applications."
   s.homepage     = "https://github.com/Neil20170223/CocoaLUT"
   s.license      = 'MIT'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  s.frameworks = ['QuartzCore', 'GLKit']
+  s.frameworks = ['QuartzCore']
 
   s.dependency 'RegExCategories'
   s.dependency 'M13OrderedDictionary'
