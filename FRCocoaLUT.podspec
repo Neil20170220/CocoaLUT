@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  s.frameworks = ['QuartzCore', 'GLKit']
+  s.frameworks = ['QuartzCore']
 
   s.dependency 'RegExCategories'
   s.dependency 'M13OrderedDictionary'

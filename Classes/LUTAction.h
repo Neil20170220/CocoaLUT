@@ -39,50 +39,6 @@
 
 +(instancetype)actionWithLUTBySwizzlingWithMethod:(LUT1DSwizzleChannelsMethod)method;
 
-+(instancetype)actionWithLUT3DByConvertingColorTemperatureFromSourceColorSpace:(LUTColorSpace *)sourceColorSpace
-                                                        sourceTransferFunction:(LUTColorTransferFunction *)sourceTransferFunction
-                                                        sourceColorTemperature:(LUTColorSpaceWhitePoint *)sourceColorTemperature
-                                                   destinationColorTemperature:(LUTColorSpaceWhitePoint *)destinationColorTemperature;
-
-+(instancetype)actionWithLUT3DByApplyingColorMatrixColumnMajorM00:(double)m00
-                                                              m01:(double)m01
-                                                              m02:(double)m02
-                                                              m10:(double)m10
-                                                              m11:(double)m11
-                                                              m12:(double)m12
-                                                              m20:(double)m20
-                                                              m21:(double)m21
-                                                              m22:(double)m22;
-
-+(instancetype)actionWithLUTByRemappingValuesWithInputLow:(double)inputLow
-                                                inputHigh:(double)inputHigh
-                                                outputLow:(double)outputLow
-                                               outputHigh:(double)outputHigh;
-
-+(instancetype)actionWithLUTByRemappingValuesWithInputLowColor:(LUTColor *)inputLowColor
-                                                     inputHigh:(LUTColor *)inputHighColor
-                                                     outputLow:(LUTColor *)outputLowColor
-                                                    outputHigh:(LUTColor *)outputHighColor;
-
-+(instancetype)actionWithLUTByCombiningWithLUT:(LUT *)lutToCombine
-                                        lutURL:(NSURL *)lutURL;
-
-+(instancetype)actionWithLUTByCombiningBehindWithLUT:(LUT *)lutToCombineBehind
-                                              lutURL:(NSURL *)lutURL;
-
-+(instancetype)actionWithLUTByScalingLegalToFull;
-+(instancetype)actionWithLUTByScalingFullToLegal;
-
-+(instancetype)actionWithLUTByScalingTo01;
-+(instancetype)actionWithLUTByScalingRGBTo01;
-
-+(instancetype)actionWithLUTByScalingCurvesTo01;
-+(instancetype)actionWithLUTByScalingCurvesRGBTo01;
-
-+(instancetype)actionWithLUTByMultiplyingByColor:(LUTColor *)color;
-
 +(instancetype)actionWithLUTByResizingToSize:(NSUInteger)size;
-
-+(instancetype)actionWithLUTByOffsettingWithColor:(LUTColor *)color;
 
 @end

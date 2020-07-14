@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <GLKit/GLKit.h>
 #import "CocoaLUT.h"
 #import "LUTColorSpaceWhitePoint.h"
 
@@ -26,8 +25,6 @@
 @property (assign) BOOL forcesNPM;
 @property (assign) double forwardFootlambertCompensation;
 
-@property (assign) GLKMatrix3 npm;
-
 @property (strong) NSString *name;
 
 
@@ -39,31 +36,6 @@
                                  blueChromaticityX:(double)blueChromaticityX
                                  blueChromaticityY:(double)blueChromaticityY
                                               name:(NSString *)name;
-
-+ (instancetype)LUTColorSpaceWithNPM:(GLKMatrix3)npm
-                                name:(NSString *)name;
-
-+ (LUT3D *)convertLUT3D:(LUT3D *)lut fromColorSpace:(LUTColorSpace *)sourceColorSpace
-             whitePoint:(LUTColorSpaceWhitePoint *)sourceWhitePoint
-           toColorSpace:(LUTColorSpace *)destinationColorSpace
-             whitePoint:(LUTColorSpaceWhitePoint *)destinationWhitePoint
-         bradfordMatrix:(BOOL)useBradfordMatrix;
-
-+ (LUT3D *)convertColorTemperatureFromLUT3D:(LUT3D *)lut
-                           sourceColorSpace:(LUTColorSpace *)sourceColorSpace
-                     sourceTransferFunction:(LUTColorTransferFunction *)sourceTransferFunction
-                     sourceColorTemperature:(LUTColorSpaceWhitePoint *)sourceColorTemperature
-                destinationColorTemperature:(LUTColorSpaceWhitePoint *)destinationColorTemperature;
-
-+ (GLKMatrix3)transformationMatrixFromColorSpace:(LUTColorSpace *)sourceColorSpace
-                                      whitePoint:(LUTColorSpaceWhitePoint *)sourceWhitePoint
-                                    toColorSpace:(LUTColorSpace *)destinationColorSpace
-                                      whitePoint:(LUTColorSpaceWhitePoint *)destinationWhitePoint
-                                  bradfordMatrix:(BOOL)useBradfordMatrix;
-
-+ (GLKMatrix3)npmFromColorSpace:(LUTColorSpace *)colorSpace
-                     whitePoint:(LUTColorSpaceWhitePoint *)whitePoint;
-
 + (NSArray *)knownColorSpaces;
 
 + (instancetype)rec709ColorSpace;
@@ -74,7 +46,6 @@
 + (instancetype)sGamut3CineColorSpace;
 + (instancetype)sGamutColorSpace;
 + (instancetype)acesGamutColorSpace;
-+ (instancetype)dciXYZColorSpace;
 + (instancetype)xyzColorSpace;
 
 

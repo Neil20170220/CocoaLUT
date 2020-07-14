@@ -36,15 +36,6 @@ typedef NS_ENUM(NSInteger, LUTMonoConversionMethod) {
 - (instancetype)LUT3DBySwizzling1DChannelsWithMethod:(LUT1DSwizzleChannelsMethod)method
                                       strictnessType:(LUT1DReverseStrictnessType)strictnessType;
 
-- (instancetype)LUT3DByApplyingColorMatrixColumnMajorM00:(double)m00
-                                                     m01:(double)m01
-                                                     m02:(double)m02
-                                                     m10:(double)m10
-                                                     m11:(double)m11
-                                                     m12:(double)m12
-                                                     m20:(double)m20
-                                                     m21:(double)m21
-                                                     m22:(double)m22;
 - (LUT1D *)LUT1D;
 
 - (BOOL)is1DLUT;
