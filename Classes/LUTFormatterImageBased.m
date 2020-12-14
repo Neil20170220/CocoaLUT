@@ -7,7 +7,7 @@
 //
 
 #import "LUTFormatterImageBased.h"
-#import "M13OrderedDictionary.h"
+#import <M13OrderedDictionary/M13OrderedDictionary.h>
 #import <MustOverride/MustOverride.h>
 
 @implementation LUTFormatterImageBased
