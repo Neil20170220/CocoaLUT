@@ -143,14 +143,36 @@ static NSMutableArray *allFormatters;
 }
 
 + (LUT *)LUTFromURL:(NSURL *)fileURL {
-    return [self LUTFromData:[NSData dataWithContentsOfURL:fileURL]];
+    NSData *data = [NSData dataWithContentsOfURL:fileURL];
+    if (!data.length) {
+        return nil;
+    }
+    return [self LUTFromData:data];
 }
 
 + (LUT *)LUTFromData:(NSData *)data {
-    return [self LUTFromString:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if (!string) {
+        NSStringEncoding encoding = [NSString stringEncodingForData:data
+                                                    encodingOptions:nil
+                                                    convertedString:nil
+                                                usedLossyConversion:NULL];
+        /// An NSStringEncoding value, or 0 if a string encoding could not be determined.
+        if (encoding == 0) {
+            return nil;
+        }
+        string = [[NSString alloc] initWithData:data encoding:encoding];
+    }
+    if (!string) {
+        return nil;
+    }
+    return [self LUTFromString:string];
 }
 
 + (LUT *)LUTFromString:(NSString *)string {
+    if (!string) {
+        return nil;
+    }
     return [self LUTFromLines:[string componentsSeparatedByCharactersInSet:NSCharacterSet.newlineCharacterSet]];
 }
 
