@@ -154,25 +154,17 @@
 }
 
 + (instancetype)LUTFromDataRepresentation:(NSData *)data{
-    if (@available(iOS 12.0, *)) {
-        return [NSKeyedUnarchiver unarchivedObjectOfClass:self fromData:data error:nil];
-    } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    return [NSKeyedUnarchiver unarchiveObjectWithData:data];
 #pragma clang diagnostic pop
-    }
 }
 
 - (NSData *)dataRepresentation{
-    if (@available(iOS 12.0, *)) {
-        return [NSKeyedArchiver archivedDataWithRootObject:self requiringSecureCoding:NO error:nil];
-    } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        return [NSKeyedArchiver archivedDataWithRootObject:self];
+    return [NSKeyedArchiver archivedDataWithRootObject:self];
 #pragma clang diagnostic pop
-    }
 }
 
 - (BOOL)writeToURL:(NSURL *)url
