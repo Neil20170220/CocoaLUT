@@ -11,6 +11,7 @@
 #import <VVLUT1DFilter/VVLUT1DFilter.h>
 #import <VVLUT1DFilter/VVLUT1DFilterWithColorSpace.h>
 #endif
+#import <CoreImage/CoreImage.h>
 
 @interface LUT1D ()
 

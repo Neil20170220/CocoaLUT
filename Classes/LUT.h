@@ -11,6 +11,7 @@
 #import <GPUImage/GPUImage.h>
 #import "GPUImageCocoaLUTFilter.h"
 #endif
+#import <CoreImage/CoreImage.h>
 
 @class LUTFormatter;
 @class LUTColor;
