@@ -18,7 +18,7 @@
 
 + (instancetype)processorForLUT:(LUT *)lut
               completionHandler:(void(^)(LUT *reversedLUT))completionHandler
-                  cancelHandler:(void(^)())cancelHandler {
+                  cancelHandler:(void(^)(void))cancelHandler {
     LUTProcessor *r = [[self alloc] init];
     [r setLut:lut];
     [r setCancelHandler:cancelHandler];

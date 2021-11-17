@@ -32,7 +32,7 @@ double lerp1d(double beginning, double end, double value01);
 double smootherstep(double beginning, double end, double percentage);
 double smoothstep(double beginning, double end, double percentage);
 float distancecalc(float x1, float y1, float z1, float x2, float y2, float z2);
-void timer(NSString* name, void (^block)());
+void timer(NSString* name, void (^block)(void));
 
 NSArray* indicesDoubleArray(double startValue, double endValue, int numIndices);
 NSArray* indicesIntegerArray(int startValue, int endValue, int numIndices);
@@ -50,8 +50,8 @@ NSString* substringBetweenTwoStrings(NSString *originString, NSString *firstStri
 NSInteger findFirstLUTLineInLines(NSArray *lines, NSString *seperator, int numValues, int startLine);
 NSInteger findFirstLUTLineInLinesWithWhitespaceSeparators(NSArray *lines, int numValues, int startLine);
 
-NSNumberFormatter* sharedNumberFormatter();
-NSCharacterSet* sharedInvertedNumericCharacterSet();
+NSNumberFormatter* sharedNumberFormatter(void);
+NSCharacterSet* sharedInvertedNumericCharacterSet(void);
 BOOL stringIsValidNumber(NSString *string);
 
 BOOL isLUT1D(LUT* lut);

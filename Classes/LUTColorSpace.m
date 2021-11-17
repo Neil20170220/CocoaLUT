@@ -332,4 +332,17 @@
                                                         name:@"CIE-XYZ"];
 }
 
+
+- (instancetype)copyWithZone:(NSZone *)zone {
+    return [self.class LUTColorSpaceWithDefaultWhitePoint:[self.defaultWhitePoint copyWithZone:zone]
+                                         redChromaticityX:self.redChromaticityX
+                                         redChromaticityY:self.redChromaticityY
+                                       greenChromaticityX:self.greenChromaticityX
+                                       greenChromaticityY:self.greenChromaticityY
+                                        blueChromaticityX:self.blueChromaticityX
+                                        blueChromaticityY:self.blueChromaticityY
+                           forwardFootlambertCompensation:self.forwardFootlambertCompensation
+                                                     name:[self.name copyWithZone:zone]];
+}
+
 @end

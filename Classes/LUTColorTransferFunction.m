@@ -292,7 +292,7 @@
     // The higher the EI, the lower the gamma
     double encGain = (log(EI/nominalEI)/log(2.0) * (0.89 - 1.0) / 3.0 + 1.0) * encodingGain;
     double encOffset = encodingOffset;
-    double nz;
+    double nz = 0;
     for (int i = 0; i < 3; i++){
         nz = ((95.0 / 1023.0 - encOffset) / encGain - offset) / slope;
         encOffset = encodingOffset - log10(1.0 + nz) * encGain;

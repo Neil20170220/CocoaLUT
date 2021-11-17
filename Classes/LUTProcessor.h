@@ -15,13 +15,13 @@
 @property (strong) LUT *lut;
 @property (strong) NSString *progressDescription;
 @property (strong) void (^completionHandler)(LUT *reversedLUT);
-@property (strong) void (^cancelHandler)();
+@property (strong) void (^cancelHandler)(void);
 @property (assign, atomic) float progress;
 @property (assign) BOOL cancelled;
 
 + (instancetype)processorForLUT:(LUT *)lut
               completionHandler:(void(^)(LUT *reversedLUT))completionHandler
-                  cancelHandler:(void(^)())cancelHandler;
+                  cancelHandler:(void(^)(void))cancelHandler;
 
 - (void)cancel;
 
