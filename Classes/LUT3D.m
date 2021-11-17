@@ -7,6 +7,7 @@
 //
 
 #import "LUT3D.h"
+@import CoreImage;
 
 @interface LUT3D()
 @property NSMutableArray *latticeArray;
