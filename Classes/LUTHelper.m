@@ -130,7 +130,7 @@ NSArray* indicesIntegerArrayLegacy(int startValue, int endValue, int numIndices)
     return indicesArray;
 }
 
-void timer(NSString* name, void (^block)()) {
+void timer(NSString* name, void (^block)(void)) {
     NSLog(@"Starting %@", name);
     NSDate *startTime = [NSDate date];
     block();
