@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
   s.name         = "FRCocoaLUT"
-  s.version      = '0.2.34'
+  s.version      = '0.2.35'
   s.summary      = "LUTs (1D and 3D color lookup tables) for Cocoa applications."
   s.homepage     = "https://github.com/Neil20170223/CocoaLUT"
   s.license      = 'MIT'
   s.author       = { "Wil Gieseler" => "wil@wilgieseler.com", "Greg Cotten" => "greg@gregcotten.com"}
-  s.source       = { :git => "git@github.com:Neil20170220/CocoaLUT.git", :tag => s.version }
+  s.source       = { :git => "git@github.com:Neil20170220/CocoaLUT.git", :tag => "CommonLocalizable.#{s.version}" }
 
   s.resource_bundle = {'TransferFunctionLUTs' => 'Assets/TransferFunctionLUTs/*.cube',
                        'ManufacturerLUTs' => 'Assets/ManufacturerLUTs/*.cube'}
