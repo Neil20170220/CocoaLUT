@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/Neil20170223/CocoaLUT"
   s.license      = 'MIT'
   s.author       = { "Wil Gieseler" => "wil@wilgieseler.com", "Greg Cotten" => "greg@gregcotten.com"}
-  s.source       = { :git => "git@github.com:Neil20170220/CocoaLUT.git", :tag => "CommonLocalizable.#{s.version}" }
+  s.source       = { :git => "git@github.com:Neil20170220/CocoaLUT.git", :tag => "FRCocoaLUT.#{s.version}" }
 
   s.resource_bundle = {'TransferFunctionLUTs' => 'Assets/TransferFunctionLUTs/*.cube',
                        'ManufacturerLUTs' => 'Assets/ManufacturerLUTs/*.cube'}
