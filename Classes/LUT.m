@@ -151,6 +151,7 @@
         }
         return nil;
     }
+    return lut;
 }
 
 + (instancetype)LUTFromDataRepresentation:(NSData *)data{
